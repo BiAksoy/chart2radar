@@ -133,7 +133,6 @@ The application recognizes the following basketball shot zones:
   - Top of Key 3
   - Right Wing 3
   - Right Corner 3
-  - Above Break 3
 
 - **Mid-Range & Paint:**
   - Left Mid Range

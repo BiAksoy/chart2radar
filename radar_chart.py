@@ -11,7 +11,7 @@ class RadarChartPlotter:
         # Standard shot zones in order for radar chart
         self.standard_zones = [
             'Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
-            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint'
+            'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint'
         ]
         
         # Colors for different players
@@ -298,9 +298,9 @@ if __name__ == "__main__":
         'Top of Key 3': 35.0,
         'Right Wing 3': 42.0,
         'Right Corner 3': 48.0,
-        'Above Break 3': 33.0,
         'Left Mid Range': 52.0,
-        'Free Throw Line': 65.0,
+        'Left Free Throw': 65.0,
+        'Right Free Throw': 68.0,
         'Right Mid Range': 48.0,
         'Paint': 72.0
     }

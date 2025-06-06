@@ -1,0 +1,600 @@
+{
+  "Marina Mabrey": {
+    "total_stats": 23,
+    "zones": {
+      "top": 10,
+      "middle": 9,
+      "bottom": 4
+    },
+    "statistics": [
+      {
+        "text": "49.1%",
+        "center_x": 422,
+        "center_y": 27,
+        "confidence": 50
+      },
+      {
+        "text": "10/21",
+        "center_x": 64,
+        "center_y": 29,
+        "confidence": 96
+      },
+      {
+        "text": "57/116",
+        "center_x": 324,
+        "center_y": 29,
+        "confidence": 65
+      },
+      {
+        "text": "5/14",
+        "center_x": 681,
+        "center_y": 29,
+        "confidence": 94
+      },
+      {
+        "text": "47.6%",
+        "center_x": 65,
+        "center_y": 66,
+        "confidence": 91
+      },
+      {
+        "text": "35.7%",
+        "center_x": 682,
+        "center_y": 66,
+        "confidence": 91
+      },
+      {
+        "text": "11/27",
+        "center_x": 190,
+        "center_y": 108,
+        "confidence": 93
+      },
+      {
+        "text": "9/22",
+        "center_x": 557,
+        "center_y": 109,
+        "confidence": 96
+      },
+      {
+        "text": "40.7%",
+        "center_x": 188,
+        "center_y": 147,
+        "confidence": 94
+      },
+      {
+        "text": "40.9%",
+        "center_x": 557,
+        "center_y": 147,
+        "confidence": 90
+      },
+      {
+        "text": "4",
+        "center_x": 306,
+        "center_y": 223,
+        "confidence": 24
+      },
+      {
+        "text": "19/48",
+        "center_x": 457,
+        "center_y": 253,
+        "confidence": 81
+      },
+      {
+        "text": "16/38",
+        "center_x": 291,
+        "center_y": 254,
+        "confidence": 96
+      },
+      {
+        "text": "N/A",
+        "center_x": 190,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "N/A",
+        "center_x": 560,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "42.1%",
+        "center_x": 290,
+        "center_y": 291,
+        "confidence": 93
+      },
+      {
+        "text": "39.6%",
+        "center_x": 456,
+        "center_y": 291,
+        "confidence": 95
+      },
+      {
+        "text": "23/61",
+        "center_x": 100,
+        "center_y": 369,
+        "confidence": 96
+      },
+      {
+        "text": "24/63",
+        "center_x": 630,
+        "center_y": 369,
+        "confidence": 93
+      },
+      {
+        "text": "37.7%",
+        "center_x": 102,
+        "center_y": 407,
+        "confidence": 95
+      },
+      {
+        "text": "38.1%",
+        "center_x": 630,
+        "center_y": 407,
+        "confidence": 95
+      },
+      {
+        "text": "33/91",
+        "center_x": 371,
+        "center_y": 493,
+        "confidence": 96
+      },
+      {
+        "text": "36.3%",
+        "center_x": 373,
+        "center_y": 532,
+        "confidence": 95
+      }
+    ]
+  },
+  "Kellsey Mitchell": {
+    "total_stats": 25,
+    "zones": {
+      "top": 9,
+      "middle": 12,
+      "bottom": 4
+    },
+    "statistics": [
+      {
+        "text": "57.9%",
+        "center_x": 432,
+        "center_y": 31,
+        "confidence": 95
+      },
+      {
+        "text": "17/38",
+        "center_x": 76,
+        "center_y": 33,
+        "confidence": 96
+      },
+      {
+        "text": "128/221",
+        "center_x": 334,
+        "center_y": 33,
+        "confidence": 96
+      },
+      {
+        "text": "16/32",
+        "center_x": 692,
+        "center_y": 33,
+        "confidence": 96
+      },
+      {
+        "text": "447%",
+        "center_x": 75,
+        "center_y": 70,
+        "confidence": 67
+      },
+      {
+        "text": "44.7%",
+        "center_x": 75,
+        "center_y": 70,
+        "confidence": 68
+      },
+      {
+        "text": "50.0%",
+        "center_x": 692,
+        "center_y": 71,
+        "confidence": 95
+      },
+      {
+        "text": "4/21",
+        "center_x": 197,
+        "center_y": 113,
+        "confidence": 40
+      },
+      {
+        "text": "7/20",
+        "center_x": 568,
+        "center_y": 113,
+        "confidence": 96
+      },
+      {
+        "text": "19.0%",
+        "center_x": 199,
+        "center_y": 151,
+        "confidence": 96
+      },
+      {
+        "text": "35.0%",
+        "center_x": 568,
+        "center_y": 151,
+        "confidence": 96
+      },
+      {
+        "text": "5",
+        "center_x": 451,
+        "center_y": 228,
+        "confidence": 30
+      },
+      {
+        "text": "N/A",
+        "center_x": 375,
+        "center_y": 230,
+        "confidence": 50
+      },
+      {
+        "text": "21/41",
+        "center_x": 298,
+        "center_y": 257,
+        "confidence": 96
+      },
+      {
+        "text": "13/28",
+        "center_x": 467,
+        "center_y": 257,
+        "confidence": 96
+      },
+      {
+        "text": "N/A",
+        "center_x": 190,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "N/A",
+        "center_x": 560,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "51.2%",
+        "center_x": 300,
+        "center_y": 295,
+        "confidence": 94
+      },
+      {
+        "text": "46.4%",
+        "center_x": 466,
+        "center_y": 295,
+        "confidence": 85
+      },
+      {
+        "text": "27/70",
+        "center_x": 112,
+        "center_y": 373,
+        "confidence": 96
+      },
+      {
+        "text": "28/75",
+        "center_x": 640,
+        "center_y": 373,
+        "confidence": 95
+      },
+      {
+        "text": "38.6%",
+        "center_x": 112,
+        "center_y": 411,
+        "confidence": 95
+      },
+      {
+        "text": "37.3%",
+        "center_x": 640,
+        "center_y": 411,
+        "confidence": 95
+      },
+      {
+        "text": "21/56",
+        "center_x": 383,
+        "center_y": 497,
+        "confidence": 96
+      },
+      {
+        "text": "37.5%",
+        "center_x": 383,
+        "center_y": 536,
+        "confidence": 95
+      }
+    ]
+  },
+  "Ariel Atkins": {
+    "total_stats": 23,
+    "zones": {
+      "top": 9,
+      "middle": 10,
+      "bottom": 4
+    },
+    "statistics": [
+      {
+        "text": "53.5%",
+        "center_x": 436,
+        "center_y": 39,
+        "confidence": 94
+      },
+      {
+        "text": "14/31",
+        "center_x": 78,
+        "center_y": 41,
+        "confidence": 96
+      },
+      {
+        "text": "61/114",
+        "center_x": 338,
+        "center_y": 41,
+        "confidence": 57
+      },
+      {
+        "text": "11/23",
+        "center_x": 696,
+        "center_y": 41,
+        "confidence": 96
+      },
+      {
+        "text": "41/23",
+        "center_x": 696,
+        "center_y": 41,
+        "confidence": 77
+      },
+      {
+        "text": "45.2%",
+        "center_x": 79,
+        "center_y": 78,
+        "confidence": 96
+      },
+      {
+        "text": "47.8%",
+        "center_x": 696,
+        "center_y": 79,
+        "confidence": 91
+      },
+      {
+        "text": "35/60",
+        "center_x": 203,
+        "center_y": 120,
+        "confidence": 96
+      },
+      {
+        "text": "13/25",
+        "center_x": 572,
+        "center_y": 120,
+        "confidence": 96
+      },
+      {
+        "text": "58.3%",
+        "center_x": 202,
+        "center_y": 159,
+        "confidence": 94
+      },
+      {
+        "text": "52.0%",
+        "center_x": 572,
+        "center_y": 159,
+        "confidence": 94
+      },
+      {
+        "text": "22/52",
+        "center_x": 303,
+        "center_y": 265,
+        "confidence": 95
+      },
+      {
+        "text": "7/2",
+        "center_x": 470,
+        "center_y": 265,
+        "confidence": 78
+      },
+      {
+        "text": "7/25",
+        "center_x": 470,
+        "center_y": 266,
+        "confidence": 91
+      },
+      {
+        "text": "N/A",
+        "center_x": 190,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "42.3%",
+        "center_x": 304,
+        "center_y": 303,
+        "confidence": 93
+      },
+      {
+        "text": "28.0%",
+        "center_x": 470,
+        "center_y": 303,
+        "confidence": 95
+      },
+      {
+        "text": "25/74",
+        "center_x": 116,
+        "center_y": 380,
+        "confidence": 94
+      },
+      {
+        "text": "11/48",
+        "center_x": 645,
+        "center_y": 381,
+        "confidence": 95
+      },
+      {
+        "text": "33.8%",
+        "center_x": 116,
+        "center_y": 419,
+        "confidence": 96
+      },
+      {
+        "text": "22.9%",
+        "center_x": 644,
+        "center_y": 419,
+        "confidence": 95
+      },
+      {
+        "text": "18/45",
+        "center_x": 387,
+        "center_y": 506,
+        "confidence": 94
+      },
+      {
+        "text": "40.0%",
+        "center_x": 386,
+        "center_y": 544,
+        "confidence": 96
+      }
+    ]
+  },
+  "Allisha Gray": {
+    "total_stats": 22,
+    "zones": {
+      "top": 8,
+      "middle": 10,
+      "bottom": 4
+    },
+    "statistics": [
+      {
+        "text": "50.3%",
+        "center_x": 428,
+        "center_y": 37,
+        "confidence": 96
+      },
+      {
+        "text": "12/26",
+        "center_x": 688,
+        "center_y": 38,
+        "confidence": 96
+      },
+      {
+        "text": "10/19",
+        "center_x": 72,
+        "center_y": 39,
+        "confidence": 96
+      },
+      {
+        "text": "95/189",
+        "center_x": 330,
+        "center_y": 39,
+        "confidence": 96
+      },
+      {
+        "text": "52.6%",
+        "center_x": 71,
+        "center_y": 76,
+        "confidence": 92
+      },
+      {
+        "text": "46.2%",
+        "center_x": 688,
+        "center_y": 76,
+        "confidence": 94
+      },
+      {
+        "text": "10/24",
+        "center_x": 196,
+        "center_y": 118,
+        "confidence": 96
+      },
+      {
+        "text": "7/18",
+        "center_x": 563,
+        "center_y": 119,
+        "confidence": 95
+      },
+      {
+        "text": "38.9%",
+        "center_x": 564,
+        "center_y": 157,
+        "confidence": 96
+      },
+      {
+        "text": "N/A",
+        "center_x": 375,
+        "center_y": 230,
+        "confidence": 50
+      },
+      {
+        "text": "20/54",
+        "center_x": 296,
+        "center_y": 264,
+        "confidence": 96
+      },
+      {
+        "text": "4/22",
+        "center_x": 462,
+        "center_y": 264,
+        "confidence": 92
+      },
+      {
+        "text": "N/A",
+        "center_x": 190,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "N/A",
+        "center_x": 560,
+        "center_y": 280,
+        "confidence": 50
+      },
+      {
+        "text": "37.0%",
+        "center_x": 296,
+        "center_y": 301,
+        "confidence": 94
+      },
+      {
+        "text": "18.2%",
+        "center_x": 463,
+        "center_y": 301,
+        "confidence": 96
+      },
+      {
+        "text": "17/48",
+        "center_x": 108,
+        "center_y": 379,
+        "confidence": 96
+      },
+      {
+        "text": "19/52",
+        "center_x": 637,
+        "center_y": 379,
+        "confidence": 96
+      },
+      {
+        "text": "35.4%",
+        "center_x": 108,
+        "center_y": 417,
+        "confidence": 95
+      },
+      {
+        "text": "36.5%",
+        "center_x": 636,
+        "center_y": 417,
+        "confidence": 95
+      },
+      {
+        "text": "11/57",
+        "center_x": 380,
+        "center_y": 504,
+        "confidence": 96
+      },
+      {
+        "text": "19.3%",
+        "center_x": 379,
+        "center_y": 542,
+        "confidence": 95
+      }
+    ]
+  }
+}

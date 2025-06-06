@@ -1,132 +1,78 @@
 {
   "Marina Mabrey": {
     "percentages": {
-      "Left Corner 3": 37.7,
-      "Left Wing 3": 0.0,
-      "Top of Key 3": 49.1,
-      "Right Wing 3": 35.714285714285715,
-      "Right Corner 3": 38.1,
-      "Above Break 3": 0.0,
-      "Left Mid Range": 42.1,
-      "Free Throw Line": 0.0,
-      "Right Mid Range": 0.0,
-      "Paint": 36.3
+      "Left Corner 3": 47.6,
+      "Left Wing 3": 37.7,
+      "Top of Key 3": 36.3,
+      "Right Wing 3": 38.1,
+      "Right Corner 3": 35.7,
+      "Left Mid Range": 40.7,
+      "Left Free Throw": 42.1,
+      "Right Free Throw": 39.6,
+      "Right Mid Range": 40.9,
+      "Paint": 49.1
     },
     "made_shots": {
-      "Left Corner 3": 23,
-      "Left Wing 3": 0,
-      "Top of Key 3": 57,
-      "Right Wing 3": 5,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 16,
-      "Free Throw Line": 0,
-      "Right Mid Range": 0,
-      "Paint": 33
+      "Left Corner 3": 10,
+      "Left Wing 3": 23,
+      "Top of Key 3": 33,
+      "Right Wing 3": 24,
+      "Right Corner 3": 5,
+      "Left Mid Range": 11,
+      "Left Free Throw": 16,
+      "Right Free Throw": 19,
+      "Right Mid Range": 9,
+      "Paint": 57
     },
     "attempts": {
-      "Left Corner 3": 61,
-      "Left Wing 3": 0,
-      "Top of Key 3": 116,
-      "Right Wing 3": 14,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 38,
-      "Free Throw Line": 0,
-      "Right Mid Range": 0,
-      "Paint": 91
+      "Left Corner 3": 21,
+      "Left Wing 3": 61,
+      "Top of Key 3": 91,
+      "Right Wing 3": 63,
+      "Right Corner 3": 14,
+      "Left Mid Range": 27,
+      "Left Free Throw": 38,
+      "Right Free Throw": 48,
+      "Right Mid Range": 22,
+      "Paint": 116
     }
   },
   "Kellsey Mitchell": {
     "percentages": {
-      "Left Corner 3": 38.6,
-      "Left Wing 3": 0.0,
-      "Top of Key 3": 57.9,
-      "Right Wing 3": 50.0,
-      "Right Corner 3": 0.0,
-      "Above Break 3": 0.0,
-      "Left Mid Range": 51.2,
-      "Free Throw Line": 0.0,
-      "Right Mid Range": 37.3,
-      "Paint": 37.5
-    },
-    "made_shots": {
-      "Left Corner 3": 27,
-      "Left Wing 3": 0,
-      "Top of Key 3": 128,
-      "Right Wing 3": 16,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 21,
-      "Free Throw Line": 0,
-      "Right Mid Range": 28,
-      "Paint": 21
-    },
-    "attempts": {
-      "Left Corner 3": 70,
-      "Left Wing 3": 0,
-      "Top of Key 3": 221,
-      "Right Wing 3": 32,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 41,
-      "Free Throw Line": 0,
-      "Right Mid Range": 75,
-      "Paint": 56
-    }
-  },
-  "Ariel Atkins": {
-    "percentages": {
-      "Left Corner 3": 33.8,
-      "Left Wing 3": 45.2,
-      "Top of Key 3": 53.5,
-      "Right Wing 3": 47.82608695652174,
-      "Right Corner 3": 0.0,
-      "Above Break 3": 0.0,
-      "Left Mid Range": 42.3,
-      "Free Throw Line": 0.0,
-      "Right Mid Range": 22.9,
-      "Paint": 40.0
-    },
-    "made_shots": {},
-    "attempts": {}
-  },
-  "Allisha Gray": {
-    "percentages": {
-      "Left Corner 3": 35.4,
-      "Left Wing 3": 0.0,
-      "Top of Key 3": 50.3,
-      "Right Wing 3": 46.15384615384615,
-      "Right Corner 3": 0.0,
-      "Above Break 3": 0.0,
-      "Left Mid Range": 37.0,
-      "Free Throw Line": 0.0,
-      "Right Mid Range": 36.5,
-      "Paint": 19.3
+      "Left Corner 3": 44.7,
+      "Left Wing 3": 38.6,
+      "Top of Key 3": 37.5,
+      "Right Wing 3": 37.3,
+      "Right Corner 3": 50.0,
+      "Left Mid Range": 19.0,
+      "Left Free Throw": 51.2,
+      "Right Free Throw": 46.4,
+      "Right Mid Range": 35.0,
+      "Paint": 57.9
     },
     "made_shots": {
       "Left Corner 3": 17,
-      "Left Wing 3": 0,
-      "Top of Key 3": 95,
-      "Right Wing 3": 12,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 20,
-      "Free Throw Line": 0,
-      "Right Mid Range": 19,
-      "Paint": 11
+      "Left Wing 3": 27,
+      "Top of Key 3": 21,
+      "Right Wing 3": 28,
+      "Right Corner 3": 16,
+      "Left Mid Range": 4,
+      "Left Free Throw": 21,
+      "Right Free Throw": 13,
+      "Right Mid Range": 7,
+      "Paint": 128
     },
     "attempts": {
-      "Left Corner 3": 48,
-      "Left Wing 3": 0,
-      "Top of Key 3": 189,
-      "Right Wing 3": 26,
-      "Right Corner 3": 0,
-      "Above Break 3": 0,
-      "Left Mid Range": 54,
-      "Free Throw Line": 0,
-      "Right Mid Range": 52,
-      "Paint": 57
+      "Left Corner 3": 38,
+      "Left Wing 3": 70,
+      "Top of Key 3": 56,
+      "Right Wing 3": 75,
+      "Right Corner 3": 32,
+      "Left Mid Range": 21,
+      "Left Free Throw": 41,
+      "Right Free Throw": 28,
+      "Right Mid Range": 20,
+      "Paint": 221
     }
   }
 }

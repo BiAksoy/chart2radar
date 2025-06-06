@@ -7,26 +7,25 @@ class ShotZoneMapper:
     """Maps OCR extracted text to basketball shot zones based on coordinates."""
     
     def __init__(self):
-        # Define shot zones with their approximate bounding boxes
-        # These coordinates are relative to a standard basketball shot chart
-        # Adjust these based on your shot chart image dimensions
+        # Define shot zones with correct bounding boxes based on actual OCR analysis
+        # These coordinates are calibrated for the actual shot chart images
         self.shot_zones = {
-            'Left Corner 3': {'x_range': (0, 150), 'y_range': (300, 500)},
-            'Right Corner 3': {'x_range': (650, 800), 'y_range': (300, 500)},
-            'Left Wing 3': {'x_range': (50, 250), 'y_range': (150, 300)},
-            'Right Wing 3': {'x_range': (550, 750), 'y_range': (150, 300)},
-            'Top of Key 3': {'x_range': (250, 550), 'y_range': (50, 200)},
-            'Above Break 3': {'x_range': (200, 600), 'y_range': (100, 250)},
-            'Left Mid Range': {'x_range': (150, 350), 'y_range': (200, 400)},
-            'Right Mid Range': {'x_range': (450, 650), 'y_range': (200, 400)},
-            'Paint': {'x_range': (300, 500), 'y_range': (350, 550)},
-            'Free Throw Line': {'x_range': (250, 550), 'y_range': (250, 350)},
+            'Left Corner 3': {'x_range': (50, 120), 'y_range': (20, 80)},
+            'Right Corner 3': {'x_range': (650, 720), 'y_range': (20, 80)},
+            'Left Wing 3': {'x_range': (80, 130), 'y_range': (350, 420)},
+            'Right Wing 3': {'x_range': (610, 660), 'y_range': (350, 420)},
+            'Top of Key 3': {'x_range': (350, 400), 'y_range': (480, 550)},
+            'Left Mid Range': {'x_range': (170, 210), 'y_range': (100, 160)},
+            'Right Mid Range': {'x_range': (540, 580), 'y_range': (100, 160)},
+            'Left Free Throw': {'x_range': (270, 320), 'y_range': (240, 310)},
+            'Right Free Throw': {'x_range': (430, 480), 'y_range': (240, 310)},
+            'Paint': {'x_range': (300, 440), 'y_range': (20, 40)},
         }
         
         # Standard shot zones in order for radar chart
         self.standard_zones = [
             'Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
-            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint'
+            'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint'
         ]
     
     def point_in_zone(self, x: int, y: int, zone_bounds: Dict) -> bool:

@@ -386,7 +386,7 @@ with tab2:
                     # Show comparison table
                     st.markdown("#### 📊 Comparison Table")
                     zones = ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
-                            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']
+                            'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']
                     
                     comp_df = pd.DataFrame({
                         player: [comparison_data[player].get(zone, 0.0) for zone in zones]
@@ -414,7 +414,7 @@ with tab2:
                                 has_made_shots_data = True
                             else:
                                 # Use zeros if no made shots data
-                                made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                                made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                         
                         if has_made_shots_data:
                             fig = plotter.plot_comparison_radar(
@@ -444,10 +444,10 @@ with tab2:
                                     has_attempts_data = True
                                 else:
                                     # Use zeros if no attempts data
-                                    attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                                    attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                             else:
                                 # Use zeros if no attempts data
-                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                         
                         if has_attempts_data:
                             fig = plotter.plot_comparison_radar(
@@ -496,7 +496,7 @@ with tab2:
                             has_made_shots_data = True
                         else:
                             # Use zeros if no made shots data
-                            made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                            made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                     
                     if has_made_shots_data:
                         fig = plotter.plot_detailed_comparison(
@@ -526,10 +526,10 @@ with tab2:
                                 has_attempts_data = True
                             else:
                                 # Use zeros if no attempts data
-                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                         else:
                             # Use zeros if no attempts data
-                            attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                            attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']}
                     
                     if has_attempts_data:
                         fig = plotter.plot_detailed_comparison(

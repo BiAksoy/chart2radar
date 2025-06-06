@@ -13,7 +13,7 @@ class PlayerSimilarityFinder:
         # Standard shot zones for consistent comparison
         self.standard_zones = [
             'Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
-            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint'
+            'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint'
         ]
     
     def normalize_player_data(self, player_data: Dict[str, Dict[str, float]]) -> Dict[str, List[float]]:
@@ -205,7 +205,7 @@ class PlayerSimilarityFinder:
                 analysis['weaknesses'].append(zone)
         
         # Identify playing style
-        three_point_zones = ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3']
+        three_point_zones = ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3']
         three_point_avg = np.mean([player_data.get(zone, 0) for zone in three_point_zones])
         
         paint_percentage = player_data.get('Paint', 0)
@@ -319,18 +319,18 @@ if __name__ == "__main__":
     sample_players = {
         "Player A": {
             'Left Corner 3': 45.0, 'Left Wing 3': 38.0, 'Top of Key 3': 35.0,
-            'Right Wing 3': 42.0, 'Right Corner 3': 48.0, 'Above Break 3': 33.0,
-            'Left Mid Range': 52.0, 'Free Throw Line': 65.0, 'Right Mid Range': 48.0, 'Paint': 72.0
+            'Right Wing 3': 42.0, 'Right Corner 3': 48.0,
+            'Left Mid Range': 52.0, 'Left Free Throw': 65.0, 'Right Free Throw': 68.0, 'Right Mid Range': 48.0, 'Paint': 72.0
         },
         "Player B": {
             'Left Corner 3': 40.0, 'Left Wing 3': 35.0, 'Top of Key 3': 32.0,
-            'Right Wing 3': 38.0, 'Right Corner 3': 45.0, 'Above Break 3': 30.0,
-            'Left Mid Range': 50.0, 'Free Throw Line': 68.0, 'Right Mid Range': 45.0, 'Paint': 75.0
+            'Right Wing 3': 38.0, 'Right Corner 3': 45.0,
+            'Left Mid Range': 50.0, 'Left Free Throw': 68.0, 'Right Free Throw': 70.0, 'Right Mid Range': 45.0, 'Paint': 75.0
         },
         "Player C": {
             'Left Corner 3': 25.0, 'Left Wing 3': 28.0, 'Top of Key 3': 22.0,
-            'Right Wing 3': 30.0, 'Right Corner 3': 28.0, 'Above Break 3': 20.0,
-            'Left Mid Range': 35.0, 'Free Throw Line': 45.0, 'Right Mid Range': 38.0, 'Paint': 85.0
+            'Right Wing 3': 30.0, 'Right Corner 3': 28.0,
+            'Left Mid Range': 35.0, 'Left Free Throw': 45.0, 'Right Free Throw': 47.0, 'Right Mid Range': 38.0, 'Paint': 85.0
         }
     }
     
