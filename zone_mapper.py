@@ -22,6 +22,12 @@ class ShotZoneMapper:
             'Paint': {'x_range': (300, 500), 'y_range': (350, 550)},
             'Free Throw Line': {'x_range': (250, 550), 'y_range': (250, 350)},
         }
+        
+        # Standard shot zones in order for radar chart
+        self.standard_zones = [
+            'Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
+            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint'
+        ]
     
     def point_in_zone(self, x: int, y: int, zone_bounds: Dict) -> bool:
         """Check if a point (x, y) falls within a zone's boundaries."""
@@ -167,19 +173,27 @@ class ShotZoneMapper:
     
     def get_normalized_zone_percentages(self, zone_data: Dict[str, Dict]) -> Dict[str, float]:
         """Convert zone data to normalized percentages for radar chart."""
-        standard_zones = [
-            'Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
-            'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint'
-        ]
-        
         normalized_data = {}
         
-        for zone in standard_zones:
+        for zone in self.standard_zones:
             if zone in zone_data:
                 percentage = zone_data[zone].get('percentage', 0.0)
                 normalized_data[zone] = percentage
             else:
                 normalized_data[zone] = 0.0
+        
+        return normalized_data
+
+    def get_normalized_zone_made_shots(self, zone_data: Dict[str, Dict]) -> Dict[str, int]:
+        """Convert zone data to normalized made shot counts for radar chart."""
+        normalized_data = {}
+        
+        for zone in self.standard_zones:
+            if zone in zone_data:
+                made_shots = zone_data[zone].get('made', 0)
+                normalized_data[zone] = made_shots
+            else:
+                normalized_data[zone] = 0
         
         return normalized_data
 

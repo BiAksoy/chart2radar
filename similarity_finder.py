@@ -224,12 +224,22 @@ class PlayerDatabase:
         self.db_file = db_file
         self.data = self.load_database()
     
-    def load_database(self) -> Dict[str, Dict[str, float]]:
+    def load_database(self) -> Dict[str, Dict[str, any]]:
         """Load player data from JSON file."""
         if os.path.exists(self.db_file):
             try:
                 with open(self.db_file, 'r') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    # Convert old format to new format if needed
+                    for player_name, player_data in data.items():
+                        if 'percentages' not in player_data:
+                            # Old format: convert to new format
+                            data[player_name] = {
+                                'percentages': player_data,
+                                'made_shots': {},
+                                'attempts': {}
+                            }
+                    return data
             except (json.JSONDecodeError, IOError):
                 return {}
         return {}
@@ -242,18 +252,57 @@ class PlayerDatabase:
         except IOError:
             print(f"Warning: Could not save database to {self.db_file}")
     
-    def add_player(self, player_name: str, zone_data: Dict[str, float]):
-        """Add a player to the database."""
-        self.data[player_name] = zone_data
+    def add_player(self, player_name: str, percentages: Dict[str, float], 
+                   made_shots: Optional[Dict[str, int]] = None, 
+                   attempts: Optional[Dict[str, int]] = None):
+        """Add a player to the database with percentages, made shots, and attempts."""
+        self.data[player_name] = {
+            'percentages': percentages,
+            'made_shots': made_shots or {},
+            'attempts': attempts or {}
+        }
         self.save_database()
     
-    def get_player(self, player_name: str) -> Optional[Dict[str, float]]:
+    def get_player(self, player_name: str) -> Optional[Dict[str, any]]:
         """Get a player's data from the database."""
         return self.data.get(player_name)
     
+    def get_player_percentages(self, player_name: str) -> Optional[Dict[str, float]]:
+        """Get a player's percentage data (for backwards compatibility)."""
+        player_data = self.data.get(player_name)
+        if player_data:
+            if 'percentages' in player_data:
+                return player_data['percentages']
+            else:
+                # Old format
+                return player_data
+        return None
+    
+    def get_player_made_shots(self, player_name: str) -> Optional[Dict[str, int]]:
+        """Get a player's made shots data."""
+        player_data = self.data.get(player_name)
+        if player_data and 'made_shots' in player_data:
+            return player_data['made_shots']
+        return None
+    
     def get_all_players(self) -> Dict[str, Dict[str, float]]:
-        """Get all players from the database."""
-        return self.data.copy()
+        """Get all players percentage data (for backwards compatibility)."""
+        result = {}
+        for player_name, player_data in self.data.items():
+            if 'percentages' in player_data:
+                result[player_name] = player_data['percentages']
+            else:
+                # Old format
+                result[player_name] = player_data
+        return result
+    
+    def get_all_players_made_shots(self) -> Dict[str, Dict[str, int]]:
+        """Get all players made shots data."""
+        result = {}
+        for player_name, player_data in self.data.items():
+            if 'made_shots' in player_data:
+                result[player_name] = player_data['made_shots']
+        return result
     
     def remove_player(self, player_name: str):
         """Remove a player from the database."""

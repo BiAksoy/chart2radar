@@ -141,16 +141,32 @@ with tab1:
                         mapper = get_zone_mapper()
                         zone_data = mapper.map_ocr_to_zones(ocr_results)
                         normalized_data = mapper.get_normalized_zone_percentages(zone_data)
+                        made_shots_data = mapper.get_normalized_zone_made_shots(zone_data)
+                        
+                        # Extract attempts data
+                        attempts_data = {}
+                        for zone in mapper.standard_zones:
+                            if zone in zone_data:
+                                attempts_data[zone] = zone_data[zone].get('attempts', 0)
+                            else:
+                                attempts_data[zone] = 0
                         
                         # Store in session state
                         st.session_state.extracted_data[st.session_state.current_player_name] = {
                             'zone_data': zone_data,
                             'normalized_data': normalized_data,
+                            'made_shots_data': made_shots_data,
+                            'attempts_data': attempts_data,
                             'raw_ocr': ocr_results
                         }
                         
-                        # Add to database
-                        st.session_state.player_database.add_player(st.session_state.current_player_name, normalized_data)
+                        # Add to database with all data types
+                        st.session_state.player_database.add_player(
+                            st.session_state.current_player_name, 
+                            normalized_data,
+                            made_shots_data,
+                            attempts_data
+                        )
                         
                         st.success(f"✅ Successfully extracted data for {st.session_state.current_player_name}!")
                         
@@ -183,12 +199,35 @@ with tab1:
             
             # Quick visualization
             st.markdown("#### 📊 Quick Radar Preview")
-            plotter = get_radar_plotter()
-            fig = plotter.plot_single_player_radar(
-                normalized_data, 
-                st.session_state.current_player_name,
-                color='#FF6B35'
+            
+            # Chart data type selection
+            chart_data_type = st.radio(
+                "Chart Data Type:",
+                ["Shooting Percentage", "Made Shots Count"],
+                horizontal=True,
+                key="preview_chart_type"
             )
+            
+            plotter = get_radar_plotter()
+            
+            if chart_data_type == "Made Shots Count":
+                # Get made shots data
+                mapper = get_zone_mapper()
+                made_shots_data = mapper.get_normalized_zone_made_shots(zone_data)
+                fig = plotter.plot_single_player_radar(
+                    made_shots_data, 
+                    st.session_state.current_player_name,
+                    color='#FF6B35',
+                    use_made_shots=True
+                )
+            else:
+                fig = plotter.plot_single_player_radar(
+                    normalized_data, 
+                    st.session_state.current_player_name,
+                    color='#FF6B35',
+                    use_made_shots=False
+                )
+            
             st.pyplot(fig, use_container_width=True)
             plt.close()
         else:
@@ -205,11 +244,22 @@ with tab2:
         st.warning("⚠️ No player data available. Please extract data from a shot chart first.")
     else:
         # Chart type selection
-        chart_type = st.radio(
-            "Select chart type:",
-            ["Single Player", "Compare Players", "Detailed Comparison"],
-            horizontal=True
-        )
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            chart_type = st.radio(
+                "Select chart type:",
+                ["Single Player", "Compare Players", "Detailed Comparison"],
+                horizontal=True
+            )
+        
+        with col2:
+            chart_data_type = st.radio(
+                "Data Type:",
+                ["Shooting %", "Made Shots"],
+                horizontal=True,
+                key="main_chart_type"
+            )
         
         if chart_type == "Single Player":
             col1, col2 = st.columns([1, 2])
@@ -247,11 +297,33 @@ with tab2:
             with col2:
                 if selected_player:
                     plotter = get_radar_plotter()
-                    fig = plotter.plot_single_player_radar(
-                        all_players[selected_player],
-                        selected_player,
-                        color='#2E86AB'
-                    )
+                    
+                    if chart_data_type == "Made Shots":
+                        # Get made shots data from database
+                        made_shots = st.session_state.player_database.get_player_made_shots(selected_player)
+                        if made_shots and any(made_shots.values()):
+                            fig = plotter.plot_single_player_radar(
+                                made_shots,
+                                selected_player,
+                                color='#2E86AB',
+                                use_made_shots=True
+                            )
+                        else:
+                            st.info("ℹ️ Made shots data not available for this player. Please extract new data to see made shots.")
+                            fig = plotter.plot_single_player_radar(
+                                all_players[selected_player],
+                                selected_player,
+                                color='#2E86AB',
+                                use_made_shots=False
+                            )
+                    else:
+                        fig = plotter.plot_single_player_radar(
+                            all_players[selected_player],
+                            selected_player,
+                            color='#2E86AB',
+                            use_made_shots=False
+                        )
+                    
                     st.pyplot(fig, use_container_width=True)
                     plt.close()
         
@@ -287,7 +359,41 @@ with tab2:
                 if len(selected_players) >= 2:
                     comparison_data = {player: all_players[player] for player in selected_players}
                     plotter = get_radar_plotter()
-                    fig = plotter.plot_comparison_radar(comparison_data, "Player Comparison")
+                    
+                    if chart_data_type == "Made Shots":
+                        # Get made shots data for all selected players
+                        made_shots_comparison = {}
+                        has_made_shots_data = False
+                        
+                        for player in selected_players:
+                            made_shots = st.session_state.player_database.get_player_made_shots(player)
+                            if made_shots and any(made_shots.values()):
+                                made_shots_comparison[player] = made_shots
+                                has_made_shots_data = True
+                            else:
+                                # Use zeros if no made shots data
+                                made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                        
+                        if has_made_shots_data:
+                            fig = plotter.plot_comparison_radar(
+                                made_shots_comparison, 
+                                "Player Comparison (Made Shots)",
+                                use_made_shots=True
+                            )
+                        else:
+                            st.info("ℹ️ Made shots data not available for selected players. Showing percentages instead.")
+                            fig = plotter.plot_comparison_radar(
+                                comparison_data, 
+                                "Player Comparison",
+                                use_made_shots=False
+                            )
+                    else:
+                        fig = plotter.plot_comparison_radar(
+                            comparison_data, 
+                            "Player Comparison",
+                            use_made_shots=False
+                        )
+                    
                     st.pyplot(fig, use_container_width=True)
                     plt.close()
         
@@ -301,7 +407,41 @@ with tab2:
             if len(selected_players) >= 2:
                 comparison_data = {player: all_players[player] for player in selected_players}
                 plotter = get_radar_plotter()
-                fig = plotter.plot_detailed_comparison(comparison_data, "Detailed Player Comparison")
+                
+                if chart_data_type == "Made Shots":
+                    # Get made shots data for all selected players
+                    made_shots_comparison = {}
+                    has_made_shots_data = False
+                    
+                    for player in selected_players:
+                        made_shots = st.session_state.player_database.get_player_made_shots(player)
+                        if made_shots and any(made_shots.values()):
+                            made_shots_comparison[player] = made_shots
+                            has_made_shots_data = True
+                        else:
+                            # Use zeros if no made shots data
+                            made_shots_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                    
+                    if has_made_shots_data:
+                        fig = plotter.plot_detailed_comparison(
+                            made_shots_comparison, 
+                            "Detailed Player Comparison (Made Shots)",
+                            use_made_shots=True
+                        )
+                    else:
+                        st.info("ℹ️ Made shots data not available for selected players. Showing percentages instead.")
+                        fig = plotter.plot_detailed_comparison(
+                            comparison_data, 
+                            "Detailed Player Comparison",
+                            use_made_shots=False
+                        )
+                else:
+                    fig = plotter.plot_detailed_comparison(
+                        comparison_data, 
+                        "Detailed Player Comparison",
+                        use_made_shots=False
+                    )
+                
                 st.pyplot(fig, use_container_width=True)
                 plt.close()
             else:
