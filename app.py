@@ -129,6 +129,16 @@ with tab1:
             image = Image.open(image_path)
             st.image(image, caption=f"Shot Chart: {st.session_state.current_player_name}", use_column_width=True)
             
+            # Games played input
+            st.markdown("#### ⚙️ Analysis Settings")
+            games_played = st.number_input(
+                "Games played by this player:", 
+                min_value=1, 
+                max_value=100, 
+                value=44, 
+                help="All stats will be scaled to 44 games for fair comparison"
+            )
+            
             # Extract data button
             if st.button("🔍 Extract Shot Data", type="primary"):
                 with st.spinner("Extracting data using OCR..."):
@@ -157,18 +167,20 @@ with tab1:
                             'normalized_data': normalized_data,
                             'made_shots_data': made_shots_data,
                             'attempts_data': attempts_data,
-                            'raw_ocr': ocr_results
+                            'raw_ocr': ocr_results,
+                            'games_played': games_played
                         }
                         
-                        # Add to database with all data types
-                        st.session_state.player_database.add_player(
+                        # Add to database with scaling to 44 games
+                        st.session_state.player_database.add_player_with_scaling(
                             st.session_state.current_player_name, 
-                            normalized_data,
                             made_shots_data,
-                            attempts_data
+                            attempts_data,
+                            games_played,
+                            44  # Target games for standardization
                         )
                         
-                        st.success(f"✅ Successfully extracted data for {st.session_state.current_player_name}!")
+                        st.success(f"✅ Successfully extracted data for {st.session_state.current_player_name}! Stats scaled to 44 games from {games_played} original games.")
                         
                     except Exception as e:
                         st.error(f"❌ Error extracting data: {str(e)}")
@@ -181,21 +193,139 @@ with tab1:
             zone_data = player_data['zone_data']
             normalized_data = player_data['normalized_data']
             
-            # Display zone statistics
+            # Display zone statistics with manual editing
             st.markdown("#### 📈 Zone Statistics")
-            stats_data = []
-            for zone, percentage in normalized_data.items():
-                zone_info = zone_data.get(zone, {})
-                made = zone_info.get('made', 0)
-                attempts = zone_info.get('attempts', 0)
-                stats_data.append({
-                    'Zone': zone,
-                    'Made/Attempts': f"{made}/{attempts}" if attempts > 0 else "N/A",
-                    'Percentage': f"{percentage:.1f}%" if percentage > 0 else "0.0%"
-                })
             
-            df = pd.DataFrame(stats_data)
-            st.dataframe(df, use_container_width=True)
+            # Toggle for edit mode
+            edit_mode = st.checkbox("✏️ Enable Manual Editing", 
+                                  help="Edit statistics manually if OCR made mistakes")
+            
+            if edit_mode:
+                st.markdown("**📝 Edit the statistics below and click 'Update' to apply changes:**")
+                
+                # Create columns for the manual edit form
+                col_zone, col_made, col_attempts = st.columns([2, 1, 1])
+                
+                with col_zone:
+                    st.markdown("**Zone**")
+                with col_made:
+                    st.markdown("**Made**")
+                with col_attempts:
+                    st.markdown("**Attempts**")
+                
+                # Create input fields for each zone
+                updated_data = {}
+                mapper = get_zone_mapper()
+                
+                for zone in mapper.standard_zones:
+                    zone_info = zone_data.get(zone, {})
+                    current_made = zone_info.get('made', 0)
+                    current_attempts = zone_info.get('attempts', 0)
+                    
+                    col_zone, col_made, col_attempts = st.columns([2, 1, 1])
+                    
+                    with col_zone:
+                        st.write(zone)
+                    
+                    with col_made:
+                        made = st.number_input(
+                            f"Made {zone}", 
+                            min_value=0, 
+                            max_value=200, 
+                            value=current_made,
+                            key=f"made_{zone}",
+                            label_visibility="collapsed"
+                        )
+                    
+                    with col_attempts:
+                        attempts = st.number_input(
+                            f"Attempts {zone}", 
+                            min_value=0, 
+                            max_value=500, 
+                            value=current_attempts,
+                            key=f"attempts_{zone}",
+                            label_visibility="collapsed"
+                        )
+                    
+                    updated_data[zone] = {'made': made, 'attempts': attempts}
+                
+                # Update button
+                col_update, col_save = st.columns([1, 1])
+                
+                with col_update:
+                    if st.button("🔄 Update Statistics", type="primary"):
+                        # Recalculate percentages
+                        new_percentages = {}
+                        new_made_shots = {}
+                        new_attempts = {}
+                        
+                        for zone, data in updated_data.items():
+                            made = data['made']
+                            attempts = data['attempts']
+                            
+                            if attempts > 0:
+                                percentage = (made / attempts) * 100
+                            else:
+                                percentage = 0.0
+                            
+                            new_percentages[zone] = percentage
+                            new_made_shots[zone] = made
+                            new_attempts[zone] = attempts
+                        
+                        # Update session state with manually edited data
+                        st.session_state.extracted_data[st.session_state.current_player_name]['normalized_data'] = new_percentages
+                        st.session_state.extracted_data[st.session_state.current_player_name]['made_shots_data'] = new_made_shots
+                        st.session_state.extracted_data[st.session_state.current_player_name]['attempts_data'] = new_attempts
+                        
+                        # Update zone_data structure
+                        new_zone_data = {}
+                        for zone, data in updated_data.items():
+                            new_zone_data[zone] = {
+                                'made': data['made'],
+                                'attempts': data['attempts'],
+                                'percentage': new_percentages[zone]
+                            }
+                        
+                        st.session_state.extracted_data[st.session_state.current_player_name]['zone_data'] = new_zone_data
+                        
+                        st.success("✅ Statistics updated successfully!")
+                        st.rerun()
+                
+                with col_save:
+                    if st.button("💾 Save to Database"):
+                        # Get current games played
+                        games_played = st.session_state.extracted_data[st.session_state.current_player_name].get('games_played', 44)
+                        
+                        # Get updated data
+                        updated_made_shots = st.session_state.extracted_data[st.session_state.current_player_name]['made_shots_data']
+                        updated_attempts = st.session_state.extracted_data[st.session_state.current_player_name]['attempts_data']
+                        
+                        # Save to database with scaling
+                        st.session_state.player_database.add_player_with_scaling(
+                            st.session_state.current_player_name,
+                            updated_made_shots,
+                            updated_attempts,
+                            games_played,
+                            44
+                        )
+                        
+                        st.success("💾 Data saved to database!")
+            
+            else:
+                # Display normal read-only table
+                stats_data = []
+                for zone, percentage in normalized_data.items():
+                    zone_info = zone_data.get(zone, {})
+                    made = zone_info.get('made', 0)
+                    attempts = zone_info.get('attempts', 0)
+                    stats_data.append({
+                        'Zone': zone,
+                        'Made/Attempts': f"{made}/{attempts}" if attempts > 0 else "N/A",
+                        'Percentage': f"{percentage:.1f}%" if percentage > 0 else "0.0%"
+                    })
+                
+                df = pd.DataFrame(stats_data)
+                st.dataframe(df, use_container_width=True)
             
             # Quick visualization
             st.markdown("#### 📊 Quick Radar Preview")
@@ -287,10 +417,21 @@ with tab2:
                     finder = get_similarity_finder()
                     analysis = finder.analyze_player_profile(player_data)
                     
+                    # Show games played info
+                    games_played = st.session_state.player_database.get_player_games_played(selected_player)
+                    original_games = st.session_state.player_database.get_player_original_games(selected_player)
+                    
+                    if games_played and original_games and games_played != original_games:
+                        st.info(f"📊 Data scaled from {original_games} games to {games_played} games for fair comparison")
+                    elif games_played:
+                        st.info(f"📊 Based on {games_played} games played")
+                    
                     col_a, col_b = st.columns(2)
                     with col_a:
                         st.metric("Overall Average", f"{analysis['overall_average']:.1f}%")
                         st.metric("Consistency Score", f"{analysis['consistency']:.1f}")
+                        if games_played:
+                            st.metric("Games Played", f"{games_played}")
                     
                     with col_b:
                         st.write("**Playing Style:**")

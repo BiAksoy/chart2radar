@@ -254,12 +254,16 @@ class PlayerDatabase:
     
     def add_player(self, player_name: str, percentages: Dict[str, float], 
                    made_shots: Optional[Dict[str, int]] = None, 
-                   attempts: Optional[Dict[str, int]] = None):
-        """Add a player to the database with percentages, made shots, and attempts."""
+                   attempts: Optional[Dict[str, int]] = None,
+                   games_played: int = 44,
+                   original_games: Optional[int] = None):
+        """Add a player to the database with percentages, made shots, attempts, and games played."""
         self.data[player_name] = {
             'percentages': percentages,
             'made_shots': made_shots or {},
-            'attempts': attempts or {}
+            'attempts': attempts or {},
+            'games_played': games_played,
+            'original_games': original_games or games_played
         }
         self.save_database()
     
@@ -283,6 +287,20 @@ class PlayerDatabase:
         player_data = self.data.get(player_name)
         if player_data and 'made_shots' in player_data:
             return player_data['made_shots']
+        return None
+    
+    def get_player_games_played(self, player_name: str) -> Optional[int]:
+        """Get a player's games played."""
+        player_data = self.data.get(player_name)
+        if player_data and 'games_played' in player_data:
+            return player_data['games_played']
+        return None
+    
+    def get_player_original_games(self, player_name: str) -> Optional[int]:
+        """Get a player's original games played."""
+        player_data = self.data.get(player_name)
+        if player_data and 'original_games' in player_data:
+            return player_data['original_games']
         return None
     
     def get_all_players(self) -> Dict[str, Dict[str, float]]:
@@ -309,6 +327,53 @@ class PlayerDatabase:
         if player_name in self.data:
             del self.data[player_name]
             self.save_database()
+    
+    @staticmethod
+    def scale_stats_to_games(made_shots: Dict[str, int], attempts: Dict[str, int], 
+                           original_games: int, target_games: int = 44) -> Tuple[Dict[str, int], Dict[str, int]]:
+        """Scale made shots and attempts from original games to target games (default 44)."""
+        if original_games <= 0:
+            return made_shots, attempts
+        
+        scale_factor = target_games / original_games
+        
+        scaled_made = {}
+        scaled_attempts = {}
+        
+        for zone in made_shots:
+            scaled_made[zone] = round(made_shots[zone] * scale_factor)
+            
+        for zone in attempts:
+            scaled_attempts[zone] = round(attempts[zone] * scale_factor)
+        
+        return scaled_made, scaled_attempts
+    
+    def add_player_with_scaling(self, player_name: str, made_shots: Dict[str, int], 
+                              attempts: Dict[str, int], original_games: int, 
+                              target_games: int = 44):
+        """Add a player with automatic scaling to target games."""
+        # Scale the stats
+        scaled_made, scaled_attempts = self.scale_stats_to_games(
+            made_shots, attempts, original_games, target_games
+        )
+        
+        # Calculate percentages
+        percentages = {}
+        for zone in scaled_made:
+            if scaled_attempts.get(zone, 0) > 0:
+                percentages[zone] = round((scaled_made[zone] / scaled_attempts[zone]) * 100, 1)
+            else:
+                percentages[zone] = 0.0
+        
+        # Add to database
+        self.add_player(
+            player_name, 
+            percentages, 
+            scaled_made, 
+            scaled_attempts, 
+            target_games, 
+            original_games
+        )
 
 
 if __name__ == "__main__":

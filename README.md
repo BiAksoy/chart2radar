@@ -10,6 +10,8 @@ A Python-based web application that extracts shot zone statistics from basketbal
 | ------------------------------------ | ------------------------------------------------------------------------------------- |
 | 🧾 **OCR-based Data Extraction**     | Extract shooting statistics like "27/70" and "38.6%" with positions using pytesseract |
 | 🧭 **Zone Inference**                | Map coordinates to known court zones (Left Corner 3, Paint, etc.)                     |
+| ⚖️ **Games Scaling**                 | Automatically scale stats to 44 games for fair comparison across players              |
+| ✏️ **Manual Editing**                | Edit OCR-extracted statistics manually if errors occur                                |
 | 📈 **Radar Chart Visualization**     | Generate interactive radar charts from per-zone shot percentages                      |
 | ⚔️ **Player Comparison**             | Compare multiple players on the same radar chart                                      |
 | 🧠 **Similar Player Identification** | Find the most similar player using cosine similarity                                  |
@@ -73,10 +75,23 @@ streamlit run app.py
    - Use sample shot charts (included in `shot_charts/` folder)
    - Or upload your own shot chart image
 
-2. **Extract Data:**
+2. **Set Analysis Settings:**
+
+   - Enter the number of games played by the player
+   - All statistics will be automatically scaled to 44 games for fair comparison
+
+3. **Extract Data:**
+
    - Click "🔍 Extract Shot Data"
    - The app will use OCR to extract shooting statistics
+   - Statistics are scaled based on games played for standardized comparison
    - View extracted zone statistics and quick radar preview
+
+4. **Manual Editing (Optional):**
+   - Enable "✏️ Enable Manual Editing" if OCR made mistakes
+   - Edit made shots and attempts for each zone
+   - Click "🔄 Update Statistics" to recalculate percentages
+   - Click "💾 Save to Database" to save corrected data
 
 ### 2. 📊 Radar Charts Tab
 
