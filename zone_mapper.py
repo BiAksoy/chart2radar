@@ -197,6 +197,19 @@ class ShotZoneMapper:
         
         return normalized_data
 
+    def get_normalized_zone_attempts(self, zone_data: Dict[str, Dict]) -> Dict[str, int]:
+        """Convert zone data to normalized attempt counts for radar chart."""
+        normalized_data = {}
+        
+        for zone in self.standard_zones:
+            if zone in zone_data:
+                attempts = zone_data[zone].get('attempts', 0)
+                normalized_data[zone] = attempts
+            else:
+                normalized_data[zone] = 0
+        
+        return normalized_data
+
 
 if __name__ == "__main__":
     # Test the zone mapper

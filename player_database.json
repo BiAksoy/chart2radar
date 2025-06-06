@@ -12,8 +12,30 @@
       "Right Mid Range": 0.0,
       "Paint": 36.3
     },
-    "made_shots": {},
-    "attempts": {}
+    "made_shots": {
+      "Left Corner 3": 23,
+      "Left Wing 3": 0,
+      "Top of Key 3": 57,
+      "Right Wing 3": 5,
+      "Right Corner 3": 0,
+      "Above Break 3": 0,
+      "Left Mid Range": 16,
+      "Free Throw Line": 0,
+      "Right Mid Range": 0,
+      "Paint": 33
+    },
+    "attempts": {
+      "Left Corner 3": 61,
+      "Left Wing 3": 0,
+      "Top of Key 3": 116,
+      "Right Wing 3": 14,
+      "Right Corner 3": 0,
+      "Above Break 3": 0,
+      "Left Mid Range": 38,
+      "Free Throw Line": 0,
+      "Right Mid Range": 0,
+      "Paint": 91
+    }
   },
   "Kellsey Mitchell": {
     "percentages": {
@@ -28,8 +50,30 @@
       "Right Mid Range": 37.3,
       "Paint": 37.5
     },
-    "made_shots": {},
-    "attempts": {}
+    "made_shots": {
+      "Left Corner 3": 27,
+      "Left Wing 3": 0,
+      "Top of Key 3": 128,
+      "Right Wing 3": 16,
+      "Right Corner 3": 0,
+      "Above Break 3": 0,
+      "Left Mid Range": 21,
+      "Free Throw Line": 0,
+      "Right Mid Range": 28,
+      "Paint": 21
+    },
+    "attempts": {
+      "Left Corner 3": 70,
+      "Left Wing 3": 0,
+      "Top of Key 3": 221,
+      "Right Wing 3": 32,
+      "Right Corner 3": 0,
+      "Above Break 3": 0,
+      "Left Mid Range": 41,
+      "Free Throw Line": 0,
+      "Right Mid Range": 75,
+      "Paint": 56
+    }
   },
   "Ariel Atkins": {
     "percentages": {

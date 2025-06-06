@@ -203,14 +203,14 @@ with tab1:
             # Chart data type selection
             chart_data_type = st.radio(
                 "Chart Data Type:",
-                ["Shooting Percentage", "Made Shots Count"],
+                ["Shooting Percentage", "Made Shots (FGM)", "Attempts (FGA)"],
                 horizontal=True,
                 key="preview_chart_type"
             )
             
             plotter = get_radar_plotter()
             
-            if chart_data_type == "Made Shots Count":
+            if chart_data_type == "Made Shots (FGM)":
                 # Get made shots data
                 mapper = get_zone_mapper()
                 made_shots_data = mapper.get_normalized_zone_made_shots(zone_data)
@@ -218,7 +218,19 @@ with tab1:
                     made_shots_data, 
                     st.session_state.current_player_name,
                     color='#FF6B35',
-                    use_made_shots=True
+                    use_made_shots=True,
+                    data_type_name="Made Shots (FGM)"
+                )
+            elif chart_data_type == "Attempts (FGA)":
+                # Get attempts data
+                mapper = get_zone_mapper()
+                attempts_data = mapper.get_normalized_zone_attempts(zone_data)
+                fig = plotter.plot_single_player_radar(
+                    attempts_data, 
+                    st.session_state.current_player_name,
+                    color='#FF6B35',
+                    use_made_shots=True,
+                    data_type_name="Attempts (FGA)"
                 )
             else:
                 fig = plotter.plot_single_player_radar(
@@ -256,7 +268,7 @@ with tab2:
         with col2:
             chart_data_type = st.radio(
                 "Data Type:",
-                ["Shooting %", "Made Shots"],
+                ["Shooting %", "Made Shots", "Attempts"],
                 horizontal=True,
                 key="main_chart_type"
             )
@@ -306,10 +318,40 @@ with tab2:
                                 made_shots,
                                 selected_player,
                                 color='#2E86AB',
-                                use_made_shots=True
+                                use_made_shots=True,
+                                data_type_name="Made Shots (FGM)"
                             )
                         else:
                             st.info("ℹ️ Made shots data not available for this player. Please extract new data to see made shots.")
+                            fig = plotter.plot_single_player_radar(
+                                all_players[selected_player],
+                                selected_player,
+                                color='#2E86AB',
+                                use_made_shots=False
+                            )
+                    elif chart_data_type == "Attempts":
+                        # Get attempts data from database
+                        player_full_data = st.session_state.player_database.get_player(selected_player)
+                        if player_full_data and 'attempts' in player_full_data:
+                            attempts = player_full_data['attempts']
+                            if any(attempts.values()):
+                                fig = plotter.plot_single_player_radar(
+                                    attempts,
+                                    selected_player,
+                                    color='#2E86AB',
+                                    use_made_shots=True,
+                                    data_type_name="Attempts (FGA)"
+                                )
+                            else:
+                                st.info("ℹ️ Attempts data not available for this player. Please extract new data to see attempts.")
+                                fig = plotter.plot_single_player_radar(
+                                    all_players[selected_player],
+                                    selected_player,
+                                    color='#2E86AB',
+                                    use_made_shots=False
+                                )
+                        else:
+                            st.info("ℹ️ Attempts data not available for this player. Please extract new data to see attempts.")
                             fig = plotter.plot_single_player_radar(
                                 all_players[selected_player],
                                 selected_player,
@@ -378,10 +420,44 @@ with tab2:
                             fig = plotter.plot_comparison_radar(
                                 made_shots_comparison, 
                                 "Player Comparison (Made Shots)",
-                                use_made_shots=True
+                                use_made_shots=True,
+                                data_type_name="Made Shots (FGM)"
                             )
                         else:
                             st.info("ℹ️ Made shots data not available for selected players. Showing percentages instead.")
+                            fig = plotter.plot_comparison_radar(
+                                comparison_data, 
+                                "Player Comparison",
+                                use_made_shots=False
+                            )
+                    elif chart_data_type == "Attempts":
+                        # Get attempts data for all selected players
+                        attempts_comparison = {}
+                        has_attempts_data = False
+                        
+                        for player in selected_players:
+                            player_full_data = st.session_state.player_database.get_player(player)
+                            if player_full_data and 'attempts' in player_full_data:
+                                attempts = player_full_data['attempts']
+                                if any(attempts.values()):
+                                    attempts_comparison[player] = attempts
+                                    has_attempts_data = True
+                                else:
+                                    # Use zeros if no attempts data
+                                    attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                            else:
+                                # Use zeros if no attempts data
+                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                        
+                        if has_attempts_data:
+                            fig = plotter.plot_comparison_radar(
+                                attempts_comparison, 
+                                "Player Comparison (Attempts)",
+                                use_made_shots=True,
+                                data_type_name="Attempts (FGA)"
+                            )
+                        else:
+                            st.info("ℹ️ Attempts data not available for selected players. Showing percentages instead.")
                             fig = plotter.plot_comparison_radar(
                                 comparison_data, 
                                 "Player Comparison",
@@ -426,10 +502,44 @@ with tab2:
                         fig = plotter.plot_detailed_comparison(
                             made_shots_comparison, 
                             "Detailed Player Comparison (Made Shots)",
-                            use_made_shots=True
+                            use_made_shots=True,
+                            data_type_name="Made Shots (FGM)"
                         )
                     else:
                         st.info("ℹ️ Made shots data not available for selected players. Showing percentages instead.")
+                        fig = plotter.plot_detailed_comparison(
+                            comparison_data, 
+                            "Detailed Player Comparison",
+                            use_made_shots=False
+                        )
+                elif chart_data_type == "Attempts":
+                    # Get attempts data for all selected players
+                    attempts_comparison = {}
+                    has_attempts_data = False
+                    
+                    for player in selected_players:
+                        player_full_data = st.session_state.player_database.get_player(player)
+                        if player_full_data and 'attempts' in player_full_data:
+                            attempts = player_full_data['attempts']
+                            if any(attempts.values()):
+                                attempts_comparison[player] = attempts
+                                has_attempts_data = True
+                            else:
+                                # Use zeros if no attempts data
+                                attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                        else:
+                            # Use zeros if no attempts data
+                            attempts_comparison[player] = {zone: 0 for zone in ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3', 'Above Break 3', 'Left Mid Range', 'Free Throw Line', 'Right Mid Range', 'Paint']}
+                    
+                    if has_attempts_data:
+                        fig = plotter.plot_detailed_comparison(
+                            attempts_comparison, 
+                            "Detailed Player Comparison (Attempts)",
+                            use_made_shots=True,
+                            data_type_name="Attempts (FGA)"
+                        )
+                    else:
+                        st.info("ℹ️ Attempts data not available for selected players. Showing percentages instead.")
                         fig = plotter.plot_detailed_comparison(
                             comparison_data, 
                             "Detailed Player Comparison",

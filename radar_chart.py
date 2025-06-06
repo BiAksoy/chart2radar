@@ -48,7 +48,8 @@ class RadarChartPlotter:
                                 title: Optional[str] = None,
                                 color: str = '#1f77b4',
                                 save_path: Optional[str] = None,
-                                use_made_shots: bool = False) -> plt.Figure:
+                                use_made_shots: bool = False,
+                                data_type_name: str = "Made Shots") -> plt.Figure:
         """Create a radar chart for a single player."""
         
         labels, values = self.prepare_data_for_radar(zone_data)
@@ -71,7 +72,7 @@ class RadarChartPlotter:
         ax.set_xticklabels(labels, fontsize=10)
         
         if use_made_shots:
-            # Set up for made shots (count data)
+            # Set up for count data (made shots or attempts)
             max_value = max(values[:-1]) if values[:-1] else 10
             max_scale = max(10, int(max_value * 1.2))  # 20% buffer above max
             ax.set_ylim(0, max_scale)
@@ -102,8 +103,10 @@ class RadarChartPlotter:
         ax.grid(True)
         
         # Add title
-        data_type = "Made Shots" if use_made_shots else "Shot Chart Analysis"
-        plot_title = title or f"{player_name} - {data_type}"
+        if use_made_shots:
+            plot_title = title or f"{player_name} - {data_type_name}"
+        else:
+            plot_title = title or f"{player_name} - Shot Chart Analysis"
         plt.title(plot_title, size=16, fontweight='bold', pad=30)
         
         # Add legend
@@ -120,7 +123,8 @@ class RadarChartPlotter:
                              player_data: Dict[str, Dict[str, float]], 
                              title: str = "Player Comparison",
                              save_path: Optional[str] = None,
-                             use_made_shots: bool = False) -> plt.Figure:
+                             use_made_shots: bool = False,
+                             data_type_name: str = "Made Shots") -> plt.Figure:
         """Create a radar chart comparing multiple players."""
         
         fig, ax = plt.subplots(figsize=(12, 10), subplot_kw=dict(projection='polar'))
@@ -150,7 +154,7 @@ class RadarChartPlotter:
         ax.set_xticklabels(labels, fontsize=10)
         
         if use_made_shots:
-            # Set up for made shots (count data)
+            # Set up for count data (made shots or attempts)
             max_value = max(all_values) if all_values else 10
             max_scale = max(10, int(max_value * 1.2))  # 20% buffer above max
             ax.set_ylim(0, max_scale)
@@ -169,8 +173,10 @@ class RadarChartPlotter:
         ax.grid(True)
         
         # Add title
-        data_type = "Made Shots Comparison" if use_made_shots else "Player Comparison"
-        plot_title = title if "Comparison" in title else data_type
+        if use_made_shots:
+            plot_title = title if "Comparison" in title else f"{data_type_name} Comparison"
+        else:
+            plot_title = title if "Comparison" in title else "Player Comparison"
         plt.title(plot_title, size=16, fontweight='bold', pad=30)
         
         # Add legend
@@ -186,7 +192,8 @@ class RadarChartPlotter:
     def plot_detailed_comparison(self, 
                                 player_data: Dict[str, Dict[str, float]],
                                 title: str = "Detailed Player Comparison",
-                                use_made_shots: bool = False) -> plt.Figure:
+                                use_made_shots: bool = False,
+                                data_type_name: str = "Made Shots") -> plt.Figure:
         """Create a detailed comparison with both radar and bar charts."""
         
         fig = plt.figure(figsize=(16, 8))
@@ -219,7 +226,7 @@ class RadarChartPlotter:
         ax1.set_xticklabels(labels, fontsize=9)
         
         if use_made_shots:
-            # Set up for made shots (count data)
+            # Set up for count data (made shots or attempts)
             max_value = max(all_values) if all_values else 10
             max_scale = max(10, int(max_value * 1.2))  # 20% buffer above max
             ax1.set_ylim(0, max_scale)
@@ -256,8 +263,8 @@ class RadarChartPlotter:
         ax2.set_xlabel('Shot Zones', fontweight='bold')
         
         if use_made_shots:
-            ax2.set_ylabel('Made Shots Count', fontweight='bold')
-            ax2.set_title('Bar Chart Comparison (Made Shots)', fontsize=14, fontweight='bold')
+            ax2.set_ylabel(f'{data_type_name} Count', fontweight='bold')
+            ax2.set_title(f'Bar Chart Comparison ({data_type_name})', fontsize=14, fontweight='bold')
             max_bar_value = max([max(zone_data.values()) for zone_data in player_data.values()]) if player_data else 10
             ax2.set_ylim(0, max_bar_value * 1.1)
         else:
@@ -270,8 +277,11 @@ class RadarChartPlotter:
         ax2.legend()
         ax2.grid(axis='y', alpha=0.3)
         
-        data_type = "Made Shots" if use_made_shots else "Shooting Percentages"
-        plt.suptitle(f"{title} - {data_type}", fontsize=16, fontweight='bold')
+        if use_made_shots:
+            main_title = f"{title} - {data_type_name}"
+        else:
+            main_title = f"{title} - Shooting Percentages"
+        plt.suptitle(main_title, fontsize=16, fontweight='bold')
         plt.tight_layout()
         
         return fig
