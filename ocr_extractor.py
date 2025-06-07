@@ -31,33 +31,21 @@ class ShotChartOCR:
         
         return cleaned
     
-    def preprocess_image_enhanced(self, image_path: str) -> List[np.ndarray]:
-        """Create multiple preprocessed versions for better OCR results."""
+    def preprocess_image_optimized(self, image_path: str) -> np.ndarray:
+        """Optimized single preprocessing method for better performance."""
         # Read image
         img = cv2.imread(image_path)
         
         # Convert to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
-        processed_images = []
-        
-        # Original grayscale
-        processed_images.append(gray)
-        
-        # Binary threshold (Otsu)
-        _, thresh_otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        processed_images.append(thresh_otsu)
-        
-        # Adaptive threshold
-        thresh_adaptive = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        processed_images.append(thresh_adaptive)
-        
-        # Gaussian blur + threshold
+        # Apply Gaussian blur to reduce noise
         blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-        _, thresh_blur = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        processed_images.append(thresh_blur)
         
-        return processed_images
+        # Use Otsu's thresholding for best results
+        _, processed = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        return processed
     
     def is_basketball_stat(self, text: str) -> bool:
         """Check if text looks like basketball statistics."""
@@ -90,41 +78,39 @@ class ShotChartOCR:
     
     def extract_text_with_positions(self, image_path: str) -> List[Dict]:
         """Extract text and their positions from shot chart image."""
-        # Get multiple preprocessed versions
-        processed_images = self.preprocess_image_enhanced(image_path)
+        # Use single optimized preprocessing
+        processed_img = self.preprocess_image_optimized(image_path)
         
-        all_extractions = []
+        # Use pytesseract to get data with optimized config
+        custom_config = r'--oem 3 --psm 6 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz./% '
+        data = pytesseract.image_to_data(processed_img, config=custom_config, output_type=pytesseract.Output.DICT)
         
-        for i, processed_img in enumerate(processed_images):
-            # Use pytesseract to get data
-            data = pytesseract.image_to_data(processed_img, output_type=pytesseract.Output.DICT)
+        extractions = []
+        
+        for i in range(len(data['text'])):
+            text = data['text'][i].strip()
+            confidence = int(data['conf'][i])
             
-            for j in range(len(data['text'])):
-                text = data['text'][j].strip()
-                confidence = int(data['conf'][j])
+            # Use consistent confidence threshold
+            if confidence > 25 and text and self.is_basketball_stat(text):
+                x = data['left'][i]
+                y = data['top'][i]
+                width = data['width'][i]
+                height = data['height'][i]
                 
-                # Lower confidence threshold and improve filtering
-                min_confidence = 20 if i == 0 else 30  # Lower threshold for original image
-                
-                if confidence > min_confidence and text and self.is_basketball_stat(text):
-                    x = data['left'][j]
-                    y = data['top'][j]
-                    width = data['width'][j]
-                    height = data['height'][j]
-                    
-                    all_extractions.append({
-                        'text': text,
-                        'x': x,
-                        'y': y,
-                        'width': width,
-                        'height': height,
-                        'confidence': confidence,
-                        'center_x': x + width // 2,
-                        'center_y': y + height // 2,
-                        'method': f'preprocessed_{i}'
-                    })
+                extractions.append({
+                    'text': text,
+                    'x': x,
+                    'y': y,
+                    'width': width,
+                    'height': height,
+                    'confidence': confidence,
+                    'center_x': x + width // 2,
+                    'center_y': y + height // 2,
+                    'method': 'optimized_preprocessing'
+                })
         
-        return all_extractions
+        return extractions
     
     def extract_from_original_image(self, image_path: str) -> List[Dict]:
         """Extract text directly from original image without preprocessing."""
@@ -295,17 +281,13 @@ class ShotChartOCR:
     
     def extract_basketball_stats(self, image_path: str) -> List[Dict]:
         """Main method to extract basketball statistics from shot chart."""
-        # Try both preprocessed and original image
+        # Use optimized single preprocessing method
         preprocessed_results = self.extract_text_with_positions(image_path)
-        original_results = self.extract_from_original_image(image_path)
-        
-        # Combine results
-        all_results = preprocessed_results + original_results
         
         # Remove duplicates
-        unique_results = self.remove_duplicates(all_results)
+        unique_results = self.remove_duplicates(preprocessed_results)
         
-        # Detect missing zones and N/A values
+        # Detect missing zones and N/A values (simplified)
         na_results = self.detect_missing_zones(image_path, unique_results)
         
         # Combine all results

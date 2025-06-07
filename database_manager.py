@@ -10,11 +10,19 @@ class SQLitePlayerDatabase:
     
     def __init__(self, db_path: str = "basketball_players.db"):
         self.db_path = db_path
+        self._connection = None
         self.init_database()
     
     def get_connection(self):
-        """Get database connection using Streamlit's connection API."""
-        return st.connection('basketball_db', type='sql', url=f'sqlite:///{self.db_path}')
+        """Get database connection with connection reuse."""
+        if self._connection is None:
+            self._connection = sqlite3.connect(self.db_path, check_same_thread=False)
+            # Enable WAL mode for better concurrency
+            self._connection.execute('PRAGMA journal_mode=WAL;')
+            self._connection.execute('PRAGMA synchronous=NORMAL;')
+            self._connection.execute('PRAGMA cache_size=10000;')
+            self._connection.execute('PRAGMA temp_store=MEMORY;')
+        return self._connection
     
     def init_database(self):
         """Initialize the database with required tables."""
@@ -58,7 +66,7 @@ class SQLitePlayerDatabase:
                    original_games: Optional[int] = None):
         """Add or update a player in the database."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self.get_connection()
             cursor = conn.cursor()
             
             # Convert dicts to JSON strings
@@ -76,7 +84,6 @@ class SQLitePlayerDatabase:
                   games_played, original_games))
             
             conn.commit()
-            conn.close()
             
             return True
             
@@ -87,12 +94,11 @@ class SQLitePlayerDatabase:
     def get_player(self, player_name: str) -> Optional[Dict[str, any]]:
         """Get a player's complete data from the database."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self.get_connection()
             cursor = conn.cursor()
             
             cursor.execute('SELECT * FROM players WHERE name = ?', (player_name,))
             row = cursor.fetchone()
-            conn.close()
             
             if row:
                 return {
@@ -133,12 +139,11 @@ class SQLitePlayerDatabase:
     def get_all_players(self) -> Dict[str, Dict[str, float]]:
         """Get all players' percentage data."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self.get_connection()
             cursor = conn.cursor()
             
             cursor.execute('SELECT name, percentages FROM players ORDER BY name')
             rows = cursor.fetchall()
-            conn.close()
             
             result = {}
             for row in rows:

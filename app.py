@@ -5,6 +5,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import json
 import os
+import gc
 from typing import Dict, List, Optional
 
 # Import our custom modules
@@ -13,6 +14,19 @@ from zone_mapper import ShotZoneMapper
 from radar_chart import RadarChartPlotter
 from similarity_finder import PlayerSimilarityFinder
 from database_manager import SQLitePlayerDatabase as PlayerDatabase
+
+# Memory cleanup utility
+def cleanup_memory():
+    """Force garbage collection to free memory."""
+    plt.close('all')  # Close all matplotlib figures
+    gc.collect()  # Force garbage collection
+
+# Cache OCR results to avoid reprocessing same images
+@st.cache_data(ttl=3600, max_entries=50)
+def cached_ocr_extraction(image_path: str, image_size: int):
+    """Cache OCR results based on image path and size."""
+    ocr = get_ocr_extractor()
+    return ocr.extract_basketball_stats(image_path)
 
 # Configure page settings
 st.set_page_config(
@@ -64,20 +78,20 @@ if 'current_player_name' not in st.session_state:
 def get_player_database():
     return PlayerDatabase()
 
-# Initialize our classes
-@st.cache_resource
+# Initialize our classes with TTL for memory management
+@st.cache_resource(ttl=3600)  # Cache for 1 hour
 def get_ocr_extractor():
     return ShotChartOCR()
 
-@st.cache_resource
+@st.cache_resource(ttl=7200)  # Cache for 2 hours
 def get_zone_mapper():
     return ShotZoneMapper()
 
-@st.cache_resource
+@st.cache_resource(ttl=7200)  # Cache for 2 hours  
 def get_radar_plotter():
     return RadarChartPlotter()
 
-@st.cache_resource
+@st.cache_resource(ttl=7200)  # Cache for 2 hours
 def get_similarity_finder():
     return PlayerSimilarityFinder()
 
@@ -124,6 +138,11 @@ with tab1:
                     f.write(uploaded_file.getbuffer())
                 player_name = st.text_input("Enter player name:", value="New Player")
                 st.session_state.current_player_name = player_name
+                
+                # Store temp file path for cleanup
+                if 'temp_files' not in st.session_state:
+                    st.session_state.temp_files = []
+                st.session_state.temp_files.append(image_path)
             else:
                 image_path = None
         
@@ -146,9 +165,9 @@ with tab1:
             if st.button("🔍 Extract Shot Data", type="primary"):
                 with st.spinner("Extracting data using OCR..."):
                     try:
-                        # Extract OCR data
-                        ocr = get_ocr_extractor()
-                        ocr_results = ocr.extract_basketball_stats(image_path)
+                        # Extract OCR data (with caching)
+                        image_size = os.path.getsize(image_path) if os.path.exists(image_path) else 0
+                        ocr_results = cached_ocr_extraction(image_path, image_size)
                         
                         # Map to zones
                         mapper = get_zone_mapper()
@@ -184,10 +203,32 @@ with tab1:
                             44  # Target games for standardization
                         )
                         
+                        # Cleanup temp files
+                        if 'temp_files' in st.session_state:
+                            for temp_file in st.session_state.temp_files:
+                                if os.path.exists(temp_file):
+                                    try:
+                                        os.remove(temp_file)
+                                    except:
+                                        pass  # Ignore errors during cleanup
+                            st.session_state.temp_files = []
+                        
                         st.success(f"✅ Successfully extracted data for {st.session_state.current_player_name}! Stats scaled to 44 games from {games_played} original games.")
+                        
+                        # Cleanup memory after processing
+                        cleanup_memory()
                         
                     except Exception as e:
                         st.error(f"❌ Error extracting data: {str(e)}")
+                        # Cleanup on error too
+                        if 'temp_files' in st.session_state:
+                            for temp_file in st.session_state.temp_files:
+                                if os.path.exists(temp_file):
+                                    try:
+                                        os.remove(temp_file)
+                                    except:
+                                        pass
+                            st.session_state.temp_files = []
     
     with col2:
         st.subheader("Extracted Statistics")
@@ -376,7 +417,8 @@ with tab1:
                 )
             
             st.pyplot(fig, use_container_width=True)
-            plt.close()
+            plt.close(fig)  # Close specific figure
+            plt.close('all')  # Ensure all figures are closed
         else:
             st.info("👆 Upload and extract a shot chart to see statistics here")
 
