@@ -158,5 +158,45 @@
     },
     "games_played": 44,
     "original_games": 40
+  },
+  "Bec Allen": {
+    "percentages": {
+      "Left Corner 3": 13.3,
+      "Left Wing 3": 0.0,
+      "Top of Key 3": 43.6,
+      "Right Wing 3": 39.3,
+      "Right Corner 3": 35.3,
+      "Left Mid Range": 0.0,
+      "Left Free Throw": 50.0,
+      "Right Free Throw": 0.0,
+      "Right Mid Range": 61.8,
+      "Paint": 0.0
+    },
+    "made_shots": {
+      "Left Corner 3": 2,
+      "Left Wing 3": 0,
+      "Top of Key 3": 17,
+      "Right Wing 3": 24,
+      "Right Corner 3": 12,
+      "Left Mid Range": 0,
+      "Left Free Throw": 10,
+      "Right Free Throw": 0,
+      "Right Mid Range": 42,
+      "Paint": 0
+    },
+    "attempts": {
+      "Left Corner 3": 15,
+      "Left Wing 3": 0,
+      "Top of Key 3": 39,
+      "Right Wing 3": 61,
+      "Right Corner 3": 34,
+      "Left Mid Range": 0,
+      "Left Free Throw": 20,
+      "Right Free Throw": 0,
+      "Right Mid Range": 68,
+      "Paint": 0
+    },
+    "games_played": 44,
+    "original_games": 18
   }
 }

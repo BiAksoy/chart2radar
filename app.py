@@ -11,7 +11,8 @@ from typing import Dict, List, Optional
 from ocr_extractor import ShotChartOCR
 from zone_mapper import ShotZoneMapper
 from radar_chart import RadarChartPlotter
-from similarity_finder import PlayerSimilarityFinder, PlayerDatabase
+from similarity_finder import PlayerSimilarityFinder
+from database_manager import SQLitePlayerDatabase as PlayerDatabase
 
 # Configure page settings
 st.set_page_config(
@@ -52,14 +53,16 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize session state
-if 'player_database' not in st.session_state:
-    st.session_state.player_database = PlayerDatabase()
-
 if 'extracted_data' not in st.session_state:
     st.session_state.extracted_data = {}
 
 if 'current_player_name' not in st.session_state:
     st.session_state.current_player_name = ""
+
+# Initialize global database (shared across all users)
+@st.cache_resource
+def get_player_database():
+    return PlayerDatabase()
 
 # Initialize our classes
 @st.cache_resource
@@ -172,7 +175,8 @@ with tab1:
                         }
                         
                         # Add to database with scaling to 44 games
-                        st.session_state.player_database.add_player_with_scaling(
+                        db = get_player_database()
+                        db.add_player_with_scaling(
                             st.session_state.current_player_name, 
                             made_shots_data,
                             attempts_data,
@@ -301,7 +305,8 @@ with tab1:
                         updated_attempts = st.session_state.extracted_data[st.session_state.current_player_name]['attempts_data']
                         
                         # Save to database with scaling
-                        st.session_state.player_database.add_player_with_scaling(
+                        db = get_player_database()
+                        db.add_player_with_scaling(
                             st.session_state.current_player_name,
                             updated_made_shots,
                             updated_attempts,
@@ -380,7 +385,8 @@ with tab2:
     st.markdown('<h2 class="sub-header">📊 Radar Chart Visualization</h2>', unsafe_allow_html=True)
     
     # Get all players from database
-    all_players = st.session_state.player_database.get_all_players()
+    db = get_player_database()
+    all_players = db.get_all_players()
     
     if not all_players:
         st.warning("⚠️ No player data available. Please extract data from a shot chart first.")
@@ -418,8 +424,9 @@ with tab2:
                     analysis = finder.analyze_player_profile(player_data)
                     
                     # Show games played info
-                    games_played = st.session_state.player_database.get_player_games_played(selected_player)
-                    original_games = st.session_state.player_database.get_player_original_games(selected_player)
+                    db = get_player_database()
+                    games_played = db.get_player_games_played(selected_player)
+                    original_games = db.get_player_original_games(selected_player)
                     
                     if games_played and original_games and games_played != original_games:
                         st.info(f"📊 Data scaled from {original_games} games to {games_played} games for fair comparison")
@@ -453,7 +460,8 @@ with tab2:
                     
                     if chart_data_type == "Made Shots":
                         # Get made shots data from database
-                        made_shots = st.session_state.player_database.get_player_made_shots(selected_player)
+                        db = get_player_database()
+                        made_shots = db.get_player_made_shots(selected_player)
                         if made_shots and any(made_shots.values()):
                             fig = plotter.plot_single_player_radar(
                                 made_shots,
@@ -472,7 +480,8 @@ with tab2:
                             )
                     elif chart_data_type == "Attempts":
                         # Get attempts data from database
-                        player_full_data = st.session_state.player_database.get_player(selected_player)
+                        db = get_player_database()
+                        player_full_data = db.get_player(selected_player)
                         if player_full_data and 'attempts' in player_full_data:
                             attempts = player_full_data['attempts']
                             if any(attempts.values()):
@@ -532,8 +541,9 @@ with tab2:
                     if chart_data_type == "Made Shots":
                         # Build table with made shots data
                         table_data = {}
+                        db = get_player_database()
                         for player in selected_players:
-                            made_shots = st.session_state.player_database.get_player_made_shots(player)
+                            made_shots = db.get_player_made_shots(player)
                             if made_shots and any(made_shots.values()):
                                 table_data[player] = [made_shots.get(zone, 0) for zone in zones]
                             else:
@@ -544,8 +554,9 @@ with tab2:
                     elif chart_data_type == "Attempts":
                         # Build table with attempts data
                         table_data = {}
+                        db = get_player_database()
                         for player in selected_players:
-                            player_full_data = st.session_state.player_database.get_player(player)
+                            player_full_data = db.get_player(player)
                             if player_full_data and 'attempts' in player_full_data:
                                 attempts = player_full_data['attempts']
                                 table_data[player] = [attempts.get(zone, 0) for zone in zones]
@@ -573,9 +584,10 @@ with tab2:
                         # Get made shots data for all selected players
                         made_shots_comparison = {}
                         has_made_shots_data = False
+                        db = get_player_database()
                         
                         for player in selected_players:
-                            made_shots = st.session_state.player_database.get_player_made_shots(player)
+                            made_shots = db.get_player_made_shots(player)
                             if made_shots and any(made_shots.values()):
                                 made_shots_comparison[player] = made_shots
                                 has_made_shots_data = True
@@ -601,9 +613,10 @@ with tab2:
                         # Get attempts data for all selected players
                         attempts_comparison = {}
                         has_attempts_data = False
+                        db = get_player_database()
                         
                         for player in selected_players:
-                            player_full_data = st.session_state.player_database.get_player(player)
+                            player_full_data = db.get_player(player)
                             if player_full_data and 'attempts' in player_full_data:
                                 attempts = player_full_data['attempts']
                                 if any(attempts.values()):
@@ -655,9 +668,10 @@ with tab2:
                     # Get made shots data for all selected players
                     made_shots_comparison = {}
                     has_made_shots_data = False
+                    db = get_player_database()
                     
                     for player in selected_players:
-                        made_shots = st.session_state.player_database.get_player_made_shots(player)
+                        made_shots = db.get_player_made_shots(player)
                         if made_shots and any(made_shots.values()):
                             made_shots_comparison[player] = made_shots
                             has_made_shots_data = True
@@ -683,9 +697,10 @@ with tab2:
                     # Get attempts data for all selected players
                     attempts_comparison = {}
                     has_attempts_data = False
+                    db = get_player_database()
                     
                     for player in selected_players:
-                        player_full_data = st.session_state.player_database.get_player(player)
+                        player_full_data = db.get_player(player)
                         if player_full_data and 'attempts' in player_full_data:
                             attempts = player_full_data['attempts']
                             if any(attempts.values()):
@@ -728,7 +743,8 @@ with tab2:
 with tab3:
     st.markdown('<h2 class="sub-header">🔍 Player Similarity Search</h2>', unsafe_allow_html=True)
     
-    all_players = st.session_state.player_database.get_all_players()
+    db = get_player_database()
+    all_players = db.get_all_players()
     
     if len(all_players) < 2:
         st.warning("⚠️ Need at least 2 players in the database to perform similarity search.")
@@ -833,8 +849,10 @@ with tab3:
 st.sidebar.markdown("---")
 st.sidebar.subheader("🗄️ Database Management")
 
-all_players = st.session_state.player_database.get_all_players()
-st.sidebar.write(f"**Players in database:** {len(all_players)}")
+db = get_player_database()
+all_players = db.get_all_players()
+db_stats = db.get_database_stats()
+st.sidebar.write(f"**Players in database:** {db_stats['total_players']}")
 
 if all_players:
     st.sidebar.write("**Current players:**")
@@ -844,13 +862,35 @@ if all_players:
     if len(all_players) > 5:
         st.sidebar.write(f"... and {len(all_players) - 5} more")
 
+# Database stats
+if db_stats['most_recent_player']:
+    st.sidebar.write(f"**Last added:** {db_stats['most_recent_player']}")
+
+# Database management options
+st.sidebar.markdown("#### 🛠️ Database Actions")
+
 # Option to clear database
 if st.sidebar.button("🗑️ Clear Database"):
     if st.sidebar.checkbox("I understand this will delete all player data"):
-        st.session_state.player_database = PlayerDatabase()
-        st.session_state.extracted_data = {}
-        st.sidebar.success("Database cleared!")
-        st.experimental_rerun()
+        db = get_player_database()
+        if db.clear_database():
+            st.session_state.extracted_data = {}
+            st.sidebar.success("Database cleared!")
+            st.rerun()
+        else:
+            st.sidebar.error("Failed to clear database!")
+
+# Option to remove specific player
+if all_players:
+    st.sidebar.markdown("#### 🗑️ Remove Player")
+    player_to_remove = st.sidebar.selectbox("Select player to remove:", [""] + list(all_players.keys()))
+    if player_to_remove and st.sidebar.button(f"Remove {player_to_remove}"):
+        db = get_player_database()
+        if db.remove_player(player_to_remove):
+            st.sidebar.success(f"Removed {player_to_remove}!")
+            st.rerun()
+        else:
+            st.sidebar.error(f"Failed to remove {player_to_remove}!")
 
 # Footer
 st.markdown("---")
