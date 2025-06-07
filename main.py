@@ -524,17 +524,43 @@ with tab2:
                 if len(selected_players) >= 2:
                     comparison_data = {player: all_players[player] for player in selected_players}
                     
-                    # Show comparison table
+                    # Show comparison table based on selected data type
                     st.markdown("#### 📊 Comparison Table")
                     zones = ['Left Corner 3', 'Left Wing 3', 'Top of Key 3', 'Right Wing 3', 'Right Corner 3',
                             'Left Mid Range', 'Left Free Throw', 'Right Free Throw', 'Right Mid Range', 'Paint']
                     
-                    comp_df = pd.DataFrame({
-                        player: [comparison_data[player].get(zone, 0.0) for zone in zones]
-                        for player in selected_players
-                    }, index=zones)
-                    
-                    st.dataframe(comp_df.round(1), use_container_width=True)
+                    if chart_data_type == "Made Shots":
+                        # Build table with made shots data
+                        table_data = {}
+                        for player in selected_players:
+                            made_shots = st.session_state.player_database.get_player_made_shots(player)
+                            if made_shots and any(made_shots.values()):
+                                table_data[player] = [made_shots.get(zone, 0) for zone in zones]
+                            else:
+                                table_data[player] = [0 for zone in zones]
+                        comp_df = pd.DataFrame(table_data, index=zones)
+                        st.dataframe(comp_df, use_container_width=True)
+                        
+                    elif chart_data_type == "Attempts":
+                        # Build table with attempts data
+                        table_data = {}
+                        for player in selected_players:
+                            player_full_data = st.session_state.player_database.get_player(player)
+                            if player_full_data and 'attempts' in player_full_data:
+                                attempts = player_full_data['attempts']
+                                table_data[player] = [attempts.get(zone, 0) for zone in zones]
+                            else:
+                                table_data[player] = [0 for zone in zones]
+                        comp_df = pd.DataFrame(table_data, index=zones)
+                        st.dataframe(comp_df, use_container_width=True)
+                        
+                    else:
+                        # Default to shooting percentages
+                        comp_df = pd.DataFrame({
+                            player: [comparison_data[player].get(zone, 0.0) for zone in zones]
+                            for player in selected_players
+                        }, index=zones)
+                        st.dataframe(comp_df.round(1), use_container_width=True)
                 else:
                     st.info("👆 Select at least 2 players to compare")
             
