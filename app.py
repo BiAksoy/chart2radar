@@ -130,7 +130,7 @@ with tab1:
         if image_path and os.path.exists(image_path):
             # Display the image
             image = Image.open(image_path)
-            st.image(image, caption=f"Shot Chart: {st.session_state.current_player_name}", use_column_width=True)
+            st.image(image, caption=f"Shot Chart: {st.session_state.current_player_name}", use_container_width=True)
             
             # Games played input
             st.markdown("#### ⚙️ Analysis Settings")
