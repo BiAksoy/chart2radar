@@ -103,6 +103,111 @@ st.markdown("### Extract shooting statistics from shot charts and visualize with
 st.sidebar.title("🏀 Navigation")
 st.sidebar.markdown("Use the tabs below to navigate through different features of the application.")
 
+# Database backup section
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 💾 Database Backup")
+if st.sidebar.button("🔄 Backup Database to JSON"):
+    db = get_player_database()
+    if db.backup_to_json():
+        st.sidebar.success("✅ Database backed up!")
+    else:
+        st.sidebar.error("❌ Backup failed!")
+
+# Upload JSON backup file
+st.sidebar.markdown("**Upload JSON backup:**")
+uploaded_json = st.sidebar.file_uploader(
+    "Choose player_database.json file",
+    type=['json'],
+    help="Upload a previously downloaded backup file",
+    key="json_uploader"
+)
+
+if uploaded_json is not None:
+    if st.sidebar.button("📥 Load Uploaded JSON", type="primary"):
+        try:
+            # Read the uploaded JSON file
+            json_content = uploaded_json.read().decode('utf-8')
+            uploaded_data = json.loads(json_content)
+            
+            # Validate JSON structure
+            if not isinstance(uploaded_data, dict):
+                st.sidebar.error("❌ Invalid JSON format!")
+            else:
+                # Clear current database
+                db = get_player_database()
+                db.clear_database()
+                
+                # Load data from uploaded JSON
+                success_count = 0
+                for player_name, player_data in uploaded_data.items():
+                    try:
+                        result = db._add_player_no_backup(
+                            player_name,
+                            player_data.get('percentages', {}),
+                            player_data.get('made_shots', {}),
+                            player_data.get('attempts', {}),
+                            player_data.get('games_played', 44),
+                            player_data.get('original_games', 44)
+                        )
+                        if result:
+                            success_count += 1
+                    except Exception as e:
+                        st.sidebar.warning(f"Could not load {player_name}: {e}")
+                
+                # Create new backup from uploaded data
+                db.backup_to_json()
+                
+                st.sidebar.success(f"✅ Loaded {success_count} players from uploaded file!")
+                st.rerun()
+                
+        except json.JSONDecodeError:
+            st.sidebar.error("❌ Invalid JSON file format!")
+        except Exception as e:
+            st.sidebar.error(f"❌ Upload error: {e}")
+
+# Load from existing backup
+st.sidebar.markdown("**Load from existing backup:**")
+if st.sidebar.button("📥 Load from Local Backup"):
+    db = get_player_database()
+    result = db.load_from_json_backup()
+    if result['success']:
+        st.sidebar.success(f"✅ {result['message']} from local backup!")
+        st.rerun()
+    else:
+        if 'already has data' in result['message']:
+            st.sidebar.info(f"ℹ️ Database already has {result['count']} players")
+        elif 'No backup file' in result['message']:
+            st.sidebar.warning("⚠️ No backup file found")
+        else:
+            st.sidebar.error(f"❌ {result['message']}")
+
+# Download current backup for manual commit
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 📥 Download Backup")
+st.sidebar.markdown("**For data persistence:** Download and commit to git")
+
+db = get_player_database()
+if db.backup_to_json():
+    try:
+        with open("player_database.json", "r") as f:
+            backup_data = f.read()
+        
+        st.sidebar.download_button(
+            label="⬇️ Download player_database.json",
+            data=backup_data,
+            file_name="player_database.json",
+            mime="application/json",
+            help="Download this file and commit it to git for persistence"
+        )
+        
+        player_count = len(json.loads(backup_data))
+        st.sidebar.info(f"📊 {player_count} players in backup")
+        
+    except Exception as e:
+        st.sidebar.error(f"Download error: {e}")
+else:
+    st.sidebar.error("❌ Could not create backup")
+
 # Create main tabs
 tab1, tab2, tab3 = st.tabs(["📤 Upload & Extract", "📊 Radar Charts", "🔍 Similarity Search"])
 

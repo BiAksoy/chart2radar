@@ -1,43 +1,87 @@
 {
-  "Marina Mabrey": {
+  "Allisha Gray": {
     "percentages": {
-      "Left Corner 3": 47.8,
-      "Left Wing 3": 37.3,
-      "Top of Key 3": 36.0,
-      "Right Wing 3": 37.7,
-      "Right Corner 3": 40.0,
-      "Left Mid Range": 40.0,
-      "Left Free Throw": 42.9,
-      "Right Free Throw": 39.6,
-      "Right Mid Range": 41.7,
-      "Paint": 49.2
+      "Left Corner 3": 52.4,
+      "Left Wing 3": 35.8,
+      "Top of Key 3": 19.0,
+      "Right Wing 3": 36.8,
+      "Right Corner 3": 44.8,
+      "Left Mid Range": 42.3,
+      "Left Free Throw": 37.3,
+      "Right Free Throw": 16.7,
+      "Right Mid Range": 40.0,
+      "Paint": 50.5
     },
     "made_shots": {
       "Left Corner 3": 11,
-      "Left Wing 3": 25,
-      "Top of Key 3": 36,
-      "Right Wing 3": 26,
-      "Right Corner 3": 6,
-      "Left Mid Range": 12,
-      "Left Free Throw": 18,
-      "Right Free Throw": 21,
-      "Right Mid Range": 10,
-      "Paint": 63
+      "Left Wing 3": 19,
+      "Top of Key 3": 12,
+      "Right Wing 3": 21,
+      "Right Corner 3": 13,
+      "Left Mid Range": 11,
+      "Left Free Throw": 22,
+      "Right Free Throw": 4,
+      "Right Mid Range": 8,
+      "Paint": 105
     },
     "attempts": {
-      "Left Corner 3": 23,
-      "Left Wing 3": 67,
-      "Top of Key 3": 100,
-      "Right Wing 3": 69,
-      "Right Corner 3": 15,
-      "Left Mid Range": 30,
-      "Left Free Throw": 42,
-      "Right Free Throw": 53,
-      "Right Mid Range": 24,
-      "Paint": 128
+      "Left Corner 3": 21,
+      "Left Wing 3": 53,
+      "Top of Key 3": 63,
+      "Right Wing 3": 57,
+      "Right Corner 3": 29,
+      "Left Mid Range": 26,
+      "Left Free Throw": 59,
+      "Right Free Throw": 24,
+      "Right Mid Range": 20,
+      "Paint": 208
     },
     "games_played": 44,
-    "original_games": 40
+    "original_games": 40,
+    "created_at": "2025-06-08 00:10:44",
+    "updated_at": "2025-06-08 00:10:44"
+  },
+  "Ariel Atkins": {
+    "percentages": {
+      "Left Corner 3": 44.1,
+      "Left Wing 3": 34.6,
+      "Top of Key 3": 40.0,
+      "Right Wing 3": 22.6,
+      "Right Corner 3": 48.0,
+      "Left Mid Range": 57.6,
+      "Left Free Throw": 42.1,
+      "Right Free Throw": 28.6,
+      "Right Mid Range": 50.0,
+      "Paint": 53.6
+    },
+    "made_shots": {
+      "Left Corner 3": 15,
+      "Left Wing 3": 28,
+      "Top of Key 3": 20,
+      "Right Wing 3": 12,
+      "Right Corner 3": 12,
+      "Left Mid Range": 38,
+      "Left Free Throw": 24,
+      "Right Free Throw": 8,
+      "Right Mid Range": 14,
+      "Paint": 67
+    },
+    "attempts": {
+      "Left Corner 3": 34,
+      "Left Wing 3": 81,
+      "Top of Key 3": 50,
+      "Right Wing 3": 53,
+      "Right Corner 3": 25,
+      "Left Mid Range": 66,
+      "Left Free Throw": 57,
+      "Right Free Throw": 28,
+      "Right Mid Range": 28,
+      "Paint": 125
+    },
+    "games_played": 44,
+    "original_games": 40,
+    "created_at": "2025-06-08 00:10:44",
+    "updated_at": "2025-06-08 00:10:44"
   },
   "Kellsey Mitchell": {
     "percentages": {
@@ -77,126 +121,50 @@
       "Paint": 243
     },
     "games_played": 44,
-    "original_games": 40
+    "original_games": 40,
+    "created_at": "2025-06-08 00:10:44",
+    "updated_at": "2025-06-08 00:10:44"
   },
-  "Ariel Atkins": {
+  "Marina Mabrey": {
     "percentages": {
-      "Left Corner 3": 44.1,
-      "Left Wing 3": 34.6,
-      "Top of Key 3": 40.0,
-      "Right Wing 3": 22.6,
-      "Right Corner 3": 180.0,
-      "Left Mid Range": 57.6,
-      "Left Free Throw": 42.1,
-      "Right Free Throw": 28.6,
-      "Right Mid Range": 50.0,
-      "Paint": 53.6
-    },
-    "made_shots": {
-      "Left Corner 3": 15,
-      "Left Wing 3": 28,
-      "Top of Key 3": 20,
-      "Right Wing 3": 12,
-      "Right Corner 3": 45,
-      "Left Mid Range": 38,
-      "Left Free Throw": 24,
-      "Right Free Throw": 8,
-      "Right Mid Range": 14,
-      "Paint": 67
-    },
-    "attempts": {
-      "Left Corner 3": 34,
-      "Left Wing 3": 81,
-      "Top of Key 3": 50,
-      "Right Wing 3": 53,
-      "Right Corner 3": 25,
-      "Left Mid Range": 66,
-      "Left Free Throw": 57,
-      "Right Free Throw": 28,
-      "Right Mid Range": 28,
-      "Paint": 125
-    },
-    "games_played": 44,
-    "original_games": 40
-  },
-  "Allisha Gray": {
-    "percentages": {
-      "Left Corner 3": 52.4,
-      "Left Wing 3": 35.8,
-      "Top of Key 3": 19.0,
-      "Right Wing 3": 36.8,
-      "Right Corner 3": 44.8,
-      "Left Mid Range": 42.3,
-      "Left Free Throw": 16.7,
-      "Right Free Throw": 0.0,
-      "Right Mid Range": 40.0,
-      "Paint": 50.5
+      "Left Corner 3": 47.8,
+      "Left Wing 3": 37.3,
+      "Top of Key 3": 36.0,
+      "Right Wing 3": 37.7,
+      "Right Corner 3": 40.0,
+      "Left Mid Range": 40.0,
+      "Left Free Throw": 42.9,
+      "Right Free Throw": 39.6,
+      "Right Mid Range": 41.7,
+      "Paint": 49.2
     },
     "made_shots": {
       "Left Corner 3": 11,
-      "Left Wing 3": 19,
-      "Top of Key 3": 12,
-      "Right Wing 3": 21,
-      "Right Corner 3": 13,
-      "Left Mid Range": 11,
-      "Left Free Throw": 4,
-      "Right Free Throw": 0,
-      "Right Mid Range": 8,
-      "Paint": 105
+      "Left Wing 3": 25,
+      "Top of Key 3": 36,
+      "Right Wing 3": 26,
+      "Right Corner 3": 6,
+      "Left Mid Range": 12,
+      "Left Free Throw": 18,
+      "Right Free Throw": 21,
+      "Right Mid Range": 10,
+      "Paint": 63
     },
     "attempts": {
-      "Left Corner 3": 21,
-      "Left Wing 3": 53,
-      "Top of Key 3": 63,
-      "Right Wing 3": 57,
-      "Right Corner 3": 29,
-      "Left Mid Range": 26,
-      "Left Free Throw": 24,
-      "Right Free Throw": 0,
-      "Right Mid Range": 20,
-      "Paint": 208
+      "Left Corner 3": 23,
+      "Left Wing 3": 67,
+      "Top of Key 3": 100,
+      "Right Wing 3": 69,
+      "Right Corner 3": 15,
+      "Left Mid Range": 30,
+      "Left Free Throw": 42,
+      "Right Free Throw": 53,
+      "Right Mid Range": 24,
+      "Paint": 128
     },
     "games_played": 44,
-    "original_games": 40
-  },
-  "Bec Allen": {
-    "percentages": {
-      "Left Corner 3": 13.3,
-      "Left Wing 3": 0.0,
-      "Top of Key 3": 43.6,
-      "Right Wing 3": 39.3,
-      "Right Corner 3": 35.3,
-      "Left Mid Range": 0.0,
-      "Left Free Throw": 50.0,
-      "Right Free Throw": 0.0,
-      "Right Mid Range": 61.8,
-      "Paint": 0.0
-    },
-    "made_shots": {
-      "Left Corner 3": 2,
-      "Left Wing 3": 0,
-      "Top of Key 3": 17,
-      "Right Wing 3": 24,
-      "Right Corner 3": 12,
-      "Left Mid Range": 0,
-      "Left Free Throw": 10,
-      "Right Free Throw": 0,
-      "Right Mid Range": 42,
-      "Paint": 0
-    },
-    "attempts": {
-      "Left Corner 3": 15,
-      "Left Wing 3": 0,
-      "Top of Key 3": 39,
-      "Right Wing 3": 61,
-      "Right Corner 3": 34,
-      "Left Mid Range": 0,
-      "Left Free Throw": 20,
-      "Right Free Throw": 0,
-      "Right Mid Range": 68,
-      "Paint": 0
-    },
-    "games_played": 44,
-    "original_games": 18
+    "original_games": 40,
+    "created_at": "2025-06-08 00:10:44",
+    "updated_at": "2025-06-08 00:10:44"
   }
 }

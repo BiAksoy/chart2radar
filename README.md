@@ -261,3 +261,74 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 🏀 **Ready to analyze some shot charts?** Run `streamlit run app.py` and start exploring!
+
+## 🚨 IMPORTANT: Database Persistence
+
+**Streamlit Community Cloud has ephemeral storage** - this means any data added during runtime gets lost on deploy/restart.
+
+### 📦 Automatic Backup System
+
+This app now includes an **automatic JSON backup system**:
+
+1. **Auto-backup**: Every time you add a player, data is automatically backed up to `player_database.json`
+2. **Auto-restore**: When the app starts, it automatically loads data from the backup if the database is empty
+3. **Git persistence**: The JSON backup file is committed to git, so data survives deploys
+
+### 🔄 Manual Backup Controls
+
+Use the sidebar controls for manual backup management:
+
+- **🔄 Backup Database to JSON**: Manually backup current database to JSON
+- **📤 Upload JSON backup**: Upload a previously downloaded JSON file
+- **📥 Load Uploaded JSON**: Load data from uploaded JSON file
+- **📥 Load from Local Backup**: Restore from existing local backup
+- **⬇️ Download player_database.json**: Download current backup for manual commit
+
+### ⚠️ Critical Limitation
+
+**Users without git access (using deployed link) cannot persist their data permanently.**
+
+Streamlit Community Cloud cannot write to git, so any data added through the deployed app will be lost on restart/redeploy.
+
+### 📋 Workflow for Data Persistence
+
+#### For Users With Git Access:
+
+1. Add players through the app
+2. Use "Download player_database.json" button in sidebar
+3. Replace the file in your local repo
+4. Commit and push to git
+
+#### For Users Without Git Access:
+
+**Option 1: Send to repo owner**
+
+1. Add players through the app
+2. Download backup using sidebar button
+3. **Send the JSON file to the repo owner**
+4. Repo owner commits the file
+
+**Option 2: Upload existing backup**
+
+1. Get JSON file from repo owner or other users
+2. Use "Upload JSON backup" in sidebar
+3. Upload the file and click "Load Uploaded JSON"
+4. Data will be available until next deploy
+
+### 🔧 For Developers
+
+```bash
+# After receiving updated JSON from users:
+cp downloaded_player_database.json player_database.json
+git add player_database.json
+git commit -m "Update player database backup"
+git push origin main
+```
+
+### 💡 Alternative Solutions
+
+For true user persistence without git workflow:
+
+1. **PostgreSQL/Firebase**: External database
+2. **Google Sheets**: Easy integration
+3. **User accounts**: With cloud storage

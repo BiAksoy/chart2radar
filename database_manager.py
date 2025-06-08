@@ -8,10 +8,15 @@ import os
 class SQLitePlayerDatabase:
     """SQLite-based persistent database for player shooting data."""
     
-    def __init__(self, db_path: str = "basketball_players.db"):
+    def __init__(self, db_path: str = "basketball_players.db", backup_json: str = "player_database.json"):
         self.db_path = db_path
+        self.backup_json = backup_json
         self._connection = None
         self.init_database()
+        # Load data from JSON backup if database is empty
+        result = self.load_from_json_backup()
+        if result['success'] and result['count'] > 0:
+            st.success(f"✅ Auto-loaded {result['count']} players from backup on startup!")
     
     def get_connection(self):
         """Get database connection with connection reuse."""
@@ -59,12 +64,90 @@ class SQLitePlayerDatabase:
         except Exception as e:
             st.error(f"Database initialization error: {e}")
     
-    def add_player(self, player_name: str, percentages: Dict[str, float], 
-                   made_shots: Optional[Dict[str, int]] = None, 
-                   attempts: Optional[Dict[str, int]] = None,
-                   games_played: int = 44,
-                   original_games: Optional[int] = None):
-        """Add or update a player in the database."""
+    def backup_to_json(self):
+        """Backup database to JSON file for git persistence."""
+        try:
+            all_players_data = {}
+            
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('SELECT * FROM players ORDER BY name')
+            rows = cursor.fetchall()
+            
+            for row in rows:
+                player_name = row[1]
+                all_players_data[player_name] = {
+                    'percentages': json.loads(row[2]),
+                    'made_shots': json.loads(row[3]) if row[3] else {},
+                    'attempts': json.loads(row[4]) if row[4] else {},
+                    'games_played': row[5],
+                    'original_games': row[6],
+                    'created_at': row[7],
+                    'updated_at': row[8]
+                }
+            
+            # Write to JSON file
+            with open(self.backup_json, 'w') as f:
+                json.dump(all_players_data, f, indent=2)
+                
+            return True
+            
+        except Exception as e:
+            st.warning(f"Backup to JSON failed: {e}")
+            return False
+    
+    def load_from_json_backup(self, force_load=False):
+        """Load data from JSON backup."""
+        try:
+            if not os.path.exists(self.backup_json):
+                return {'success': False, 'message': 'No backup file found', 'count': 0}
+                
+            # Check if database has data (unless force loading)
+            if not force_load:
+                conn = self.get_connection()
+                cursor = conn.cursor()
+                cursor.execute('SELECT COUNT(*) FROM players')
+                count = cursor.fetchone()[0]
+                
+                if count > 0:
+                    return {'success': False, 'message': 'Database already has data', 'count': count}
+            
+            # Load from JSON backup
+            with open(self.backup_json, 'r') as f:
+                backup_data = json.load(f)
+            
+            if not backup_data:
+                return {'success': False, 'message': 'Backup file is empty', 'count': 0}
+            
+            # Insert all players from backup (without triggering backup)
+            loaded_count = 0
+            for player_name, player_data in backup_data.items():
+                try:
+                    result = self._add_player_no_backup(
+                        player_name,
+                        player_data.get('percentages', {}),
+                        player_data.get('made_shots', {}),
+                        player_data.get('attempts', {}),
+                        player_data.get('games_played', 44),
+                        player_data.get('original_games', 44)
+                    )
+                    if result:
+                        loaded_count += 1
+                except Exception as e:
+                    st.warning(f"Could not load player {player_name}: {e}")
+            
+            return {'success': True, 'message': f'Loaded {loaded_count} players', 'count': loaded_count}
+            
+        except Exception as e:
+            return {'success': False, 'message': f'Error: {e}', 'count': 0}
+    
+    def _add_player_no_backup(self, player_name: str, percentages: Dict[str, float], 
+                             made_shots: Optional[Dict[str, int]] = None, 
+                             attempts: Optional[Dict[str, int]] = None,
+                             games_played: int = 44,
+                             original_games: Optional[int] = None):
+        """Add player without triggering backup (for loading from backup)."""
         try:
             conn = self.get_connection()
             cursor = conn.cursor()
@@ -84,12 +167,25 @@ class SQLitePlayerDatabase:
                   games_played, original_games))
             
             conn.commit()
-            
             return True
             
         except Exception as e:
             st.error(f"Error adding player {player_name}: {e}")
             return False
+
+    def add_player(self, player_name: str, percentages: Dict[str, float], 
+                   made_shots: Optional[Dict[str, int]] = None, 
+                   attempts: Optional[Dict[str, int]] = None,
+                   games_played: int = 44,
+                   original_games: Optional[int] = None):
+        """Add or update a player in the database."""
+        result = self._add_player_no_backup(player_name, percentages, made_shots, attempts, games_played, original_games)
+        
+        if result:
+            # Auto-backup to JSON after each addition
+            self.backup_to_json()
+            
+        return result
     
     def get_player(self, player_name: str) -> Optional[Dict[str, any]]:
         """Get a player's complete data from the database."""
@@ -196,12 +292,11 @@ class SQLitePlayerDatabase:
     def clear_database(self) -> bool:
         """Clear all players from the database."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = self.get_connection()
             cursor = conn.cursor()
             
             cursor.execute('DELETE FROM players')
             conn.commit()
-            conn.close()
             
             return True
             
